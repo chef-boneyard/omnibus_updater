@@ -25,11 +25,20 @@ override_attributes(
 )
 ```
 
-Current Support
-===============
+It can also uninstall Chef from the system Ruby installation
+if you tell it to:
 
-Currently support has only been added for the debian family. Support
-for RPM and script installs should be available soon.
+```
+override_attributes(
+  :omnibus_updater => {
+    :remove_chef_system_gem => true
+  }
+)
+```
+
+The default recipe will install the omnibus package based
+on system information but you can override that by using
+the `install_via` attribute which accepts: deb, rpm or script.
 
 Infos
 =====
