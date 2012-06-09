@@ -35,6 +35,11 @@ override_attributes(
   }
 )
 ```
+---
+If you are using a Chef version earlier than 10.12.0 you may want
+to take a look at the chef_gem cookbook to ensure gems are going
+where expected.
+---
 
 The default recipe will install the omnibus package based
 on system information but you can override that by using
