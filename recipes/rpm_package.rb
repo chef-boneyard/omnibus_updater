@@ -26,6 +26,17 @@ execute "chef omnibus_install[#{node[:omnibus_updater][:version]}]" do
   end
 end
 
+# NOTE: chef gem is missing (!?) in the omnibus build in the 5.7 package
+execute "chef gem_install_fix[#{node[:omnibus_updater][:version]}]" do
+  ver = node[:omnibus_updater][:version].scan(/\d+\.\d+\.\d+/).first
+  dir = Gem::Version.new(ver) < Gem::Version.new('10.12.0') ? 'opscode' : 'chef'
+  command "/opt/#{dir}/embedded/bin/gem install --no-ri --no-rdoc -v #{ver} chef"
+  only_if do
+    node[:omnibus_updater][:full_uri].include?('5.7')
+  end
+end
+
+
 ruby_block "omnibus_updater[remove old rpms]" do
   block do
     Dir.glob(File.join(node[:omnibus_updater][:cache_dir], 'chef*.rpm')).each do |file|
