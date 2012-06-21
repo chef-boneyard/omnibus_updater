@@ -13,11 +13,11 @@ when 'debian'
       raise 'Unsupported ubuntu version for deb packaged omnibus'
     end
   else
-    platform_version = case node.platform_version.split('.').first
+    platform_version = case pv = node.platform_version.split('.').first
     when '6', '5'
       '6.0.1'
     else
-      platform_version = node.platform_version.split('.').first
+      pv
     end
   end
 when 'fedora', 'rhel'
