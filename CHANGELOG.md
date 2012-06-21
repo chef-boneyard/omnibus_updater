@@ -1,3 +1,7 @@
+v0.0.3
+======
+* Path fix for debian omnibus packages (thanks [ashmere](https://github.com/ashmere))
+
 v0.0.2
 ======
 * Add robust check when uninstalling chef gem to prevent removal from omnibus
