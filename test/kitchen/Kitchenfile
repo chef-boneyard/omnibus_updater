@@ -1,0 +1,3 @@
+cookbook "chef-omnibus_updater" do
+  runtimes []
+end
