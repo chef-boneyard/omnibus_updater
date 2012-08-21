@@ -40,7 +40,7 @@ else
   install_via = case node.platform_family
   when 'debian'
     'deb'
-  when 'fedora', 'rhel'
+  when 'fedora', 'rhel', 'centos'
     'rpm'
   else
     'script'
