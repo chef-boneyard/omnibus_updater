@@ -43,12 +43,12 @@ else
   when 'fedora', 'rhel', 'centos'
     'rpm'
   else
-    'script'
+    raise 'Unsupported omnibus install method requested'
   end
 end
 case install_via
 when 'deb'
-  file_name = "chef-full_#{node[:omnibus_updater][:version]}_"
+  file_name = "chef_#{node[:omnibus_updater][:version]}.#{platform_name}.#{platform_version}_"
   if(node.kernel.machine.include?('64'))
     file_name << 'amd64'
   else
@@ -57,15 +57,13 @@ when 'deb'
   file_name << '.deb'
 
 when 'rpm'
-  file_name = "chef-full-#{node[:omnibus_updater][:version]}.#{node.kernel.machine}.rpm"
-else
-  file_name = "chef-full-#{node[:omnibus_updater][:version]}-#{platform_name}-#{platform_version}-#{node.kernel.machine}.sh"
+  file_name = "chef_#{node[:omnibus_updater][:version]}.#{platform_name}.#{node.kernel.machine}.rpm"
 end
 
 remote_omnibus_file = File.join(
   node[:omnibus_updater][:base_uri],
-  platform_name + '-' +
-  platform_version + '-' +
+  platform_name,
+  platform_version,
   node.kernel.machine,
   file_name
 )
