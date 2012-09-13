@@ -1,3 +1,4 @@
 cookbook "omnibus_updater" do
+  lint :ignore => %w(FC001 FC019)
   runtimes []
 end
