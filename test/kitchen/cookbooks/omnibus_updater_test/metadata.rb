@@ -1,0 +1,1 @@
+depends "omnibus_updater"

@@ -48,6 +48,6 @@ the `install_via` attribute which accepts: deb, rpm or script.
 Infos
 =====
 
-* Repo: https://github.com/heavywater/chef-omnibus_updater
+* Repo: https://github.com/hw-cookbooks/omnibus_updater
 
 
