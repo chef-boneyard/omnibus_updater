@@ -1,4 +1,4 @@
-default[:omnibus_updater][:version] = '10.12.0-1'
+default[:omnibus_updater][:version] = '10.14.2-1'
 default[:omnibus_updater][:base_uri] = 'http://opscode-omnitruck-release.s3.amazonaws.com'
 default[:omnibus_updater][:cache_dir] = '/opt'
 default[:omnibus_updater][:cache_omnibus_installer] = false
