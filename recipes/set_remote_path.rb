@@ -62,6 +62,6 @@ remote_omnibus_file = File.join(
 )
 
 unless(remote_omnibus_file == node[:omnibus_updater][:full_uri])
-  node.set[:omnibus_updater][:full_uri] = remote_omnibus_file
+  node.override[:omnibus_updater][:full_uri] = remote_omnibus_file
   Chef::Log.info "Omnibus remote file location: #{remote_omnibus_file}"
 end
