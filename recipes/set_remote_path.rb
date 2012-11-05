@@ -9,7 +9,7 @@ when 'debian'
     when '10.10', '10.04'
        platform_majorversion << '10.04'
       '10.04'
-    when '12.04', '11.10', '11.04'
+    when '12.10', '12.04', '11.10', '11.04'
        platform_majorversion << '11.04'
       '11.04'
     else
