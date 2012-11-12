@@ -1,3 +1,8 @@
+v0.0.5
+======
+* Add support for Ubuntu 12.10
+* Path fixes for non-64 bit packages (thanks [ashmere](https://github.com/ashmere))
+
 v0.0.4
 ======
 * Use new aws bucket by default
