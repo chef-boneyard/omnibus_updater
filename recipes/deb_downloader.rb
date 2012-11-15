@@ -1,3 +1,6 @@
+# NOTE: This recipe is here for others that just want the
+# package, not the actual installation (lxc for example)
+
 include_recipe 'omnibus_updater::set_remote_path'
 
 remote_file "chef omnibus_package_downloader[#{File.basename(node[:omnibus_updater][:full_uri])}]" do
@@ -12,4 +15,4 @@ remote_file "chef omnibus_package_downloader[#{File.basename(node[:omnibus_updat
   end
 end
 
-include_recipe 'omnibus_updater::_old_deb_cleaner'
+include_recipe 'omnibus_updater::old_package_cleaner'
