@@ -49,7 +49,7 @@ end
 case install_via
 when 'deb'
   kernel_name = ""
-  file_name = "chef_#{node[:omnibus_updater][:version]}.#{platform_name}.#{platform_version}_"
+  file_name = "chef_#{node[:omnibus_updater][:full_version]}.#{platform_name}.#{platform_version}_"
   if(node.kernel.machine.include?('64'))
     file_name << 'amd64'
     kernel_name << 'x86_64'
@@ -60,7 +60,7 @@ when 'deb'
   file_name << '.deb'
 
 when 'rpm'
-  file_name = "chef-#{node[:omnibus_updater][:version]}.#{platform_name}#{platform_version}.#{node.kernel.machine}.rpm"
+  file_name = "chef-#{node[:omnibus_updater][:full_version]}.#{platform_name}#{platform_version}.#{node.kernel.machine}.rpm"
 end
 
 remote_omnibus_file = File.join(

@@ -1,3 +1,8 @@
+if(node[:omnibus_updater][:version].include?('-'))
+  node.default[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
+else
+  node.default[:omnibus_updater][:full_version] = "#{node[:omnibus_updater][:version]}-1"
+end
 
 if(node[:omnibus_updater][:install_via])
   case node[:omnibus_updater][:install_via]
