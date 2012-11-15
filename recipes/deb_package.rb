@@ -26,4 +26,4 @@ execute "chef omnibus_install[#{node[:omnibus_updater][:version]}]" do
   end
 end
 
-include_recipe 'omnibus_updater::_old_deb_cleaner'
+include_recipe 'omnibus_updater::old_package_cleaner'

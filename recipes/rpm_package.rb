@@ -26,13 +26,4 @@ execute "chef omnibus_install[#{node[:omnibus_updater][:version]}]" do
   end
 end
 
-ruby_block "omnibus_updater[remove old rpms]" do
-  block do
-    Dir.glob(File.join(node[:omnibus_updater][:cache_dir], 'chef*.rpm')).each do |file|
-      unless(file.include?(node[:omnibus_updater][:version]))
-        Chef::Log.info "Deleting stale omnibus package: #{file}"
-        File.delete(file)
-      end
-    end
-  end
-end
+include_recipe 'omnibus_updater::old_package_cleaner'
