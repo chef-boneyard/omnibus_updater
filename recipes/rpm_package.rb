@@ -13,8 +13,6 @@ remote_file "chef omnibus_package[#{File.basename(node[:omnibus_updater][:full_u
   end
 end
 
-# NOTE: We do not use notifications to trigger the install
-#   since they are broken with remote_file in 0.10.10
 execute "chef omnibus_install[#{node[:omnibus_updater][:full_version]}]" do
   command "rpm -Uvh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(node[:omnibus_updater][:full_uri]))}"
   only_if do

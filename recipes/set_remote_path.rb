@@ -1,5 +1,20 @@
 # RULES
 
+if(node[:omnibus_updater][:version].nil? || node[:omnibus_updater][:version_search])
+  require 'open-uri'
+  require 'rexml/document'
+  pkgs_doc = REXML::Document.new(open(node[:omnibus_updater][:base_uri]))
+  pkgs_avail = pkgs_doc.elements.to_a('//Contents//Key').map(&:text).find_all do |f|
+    !f.scan(/\.(rpm|deb)$/)
+  end
+else
+  if(node[:omnibus_updater][:version].include?('-'))
+    node.default[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
+  else
+    node.default[:omnibus_updater][:full_version] = "#{node[:omnibus_updater][:version]}-1"
+  end
+end
+
 platform_name = node.platform
 platform_majorversion = ""
 case node.platform_family
@@ -29,7 +44,6 @@ when 'fedora', 'rhel'
   platform_version = node.platform_version.split('.').first
   platform_name = 'el'
   platform_majorversion << '6'
-
 else
   platform_version = node.platform_version
 end
@@ -48,30 +62,61 @@ else
 end
 case install_via
 when 'deb'
-  kernel_name = ""
-  file_name = "chef_#{node[:omnibus_updater][:full_version]}.#{platform_name}.#{platform_version}_"
-  if(node.kernel.machine.include?('64'))
-    file_name << 'amd64'
-    kernel_name << 'x86_64'
+  if(pkgs_avail)
+    path_name = pkgs_avail.find_all{ |path|
+      ver = node[:omnibus_updater][:version] || '.'
+      path.include?('.deb') && path.include?(platform_name) && 
+      path.include?(platform_version) && path.include?(node.kernel.machine) &&
+      path.include?(ver)
+    }.sort.last
   else
-    file_name << 'i386'
-    kernel_name << 'i686'
+    kernel_name = ""
+    file_name = "chef_#{node[:omnibus_updater][:full_version]}.#{platform_name}.#{platform_version}_"
+    if(node.kernel.machine.include?('64'))
+      file_name << 'amd64'
+      kernel_name << 'x86_64'
+    else
+      file_name << 'i386'
+      kernel_name << 'i686'
+    end
+    file_name << '.deb'
   end
-  file_name << '.deb'
-
 when 'rpm'
-  file_name = "chef-#{node[:omnibus_updater][:full_version]}.#{platform_name}#{platform_version}.#{node.kernel.machine}.rpm"
+  if(pkgs_avail)
+    path_name = pkgs_avail.find_all{ |path|
+      ver = node[:omnibus_updater][:version] || '.'
+      path.include?('.rpm') && path.include?(platform_name) && 
+      path.include?(platform_version) && path.include?(node.kernel.machine) &&
+      path.include?(ver)
+    }.sort.last
+  else
+    file_name = "chef-#{node[:omnibus_updater][:full_version]}.#{platform_name}#{platform_version}.#{node.kernel.machine}.rpm"
+  end
 end
 
-remote_omnibus_file = File.join(
-  node[:omnibus_updater][:base_uri],
-  platform_name,
-  platform_majorversion,
-  kernel_name,
-  file_name
-)
+remote_omnibus_file = if(path_name)
+    File.join(node[:omnibus_updater][:base_uri], path_name)
+  else
+    File.join(
+      node[:omnibus_updater][:base_uri],
+      platform_name,
+      platform_majorversion,
+      kernel_name,
+      file_name
+    )
+  end
 
 unless(remote_omnibus_file == node[:omnibus_updater][:full_uri])
   node.override[:omnibus_updater][:full_uri] = remote_omnibus_file
   Chef::Log.info "Omnibus remote file location: #{remote_omnibus_file}"
 end
+
+unless(node[:omnibus_updater][:full_version])
+  node.default[:omnibus_updater][:version] = remote_omnibus_file.scan(/chef[_-](\d+\.\d+\.\d+/).flatten.first
+  if(node[:omnibus_updater][:version].include?('-'))
+    node.default[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
+  else
+    node.default[:omnibus_updater][:full_version] = "#{node[:omnibus_updater][:version]}-1"
+  end
+end
+
