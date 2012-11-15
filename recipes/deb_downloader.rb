@@ -12,13 +12,4 @@ remote_file "chef omnibus_package_downloader[#{File.basename(node[:omnibus_updat
   end
 end
 
-ruby_block "omnibus_updater[remove old debs]" do
-  block do
-    Dir.glob(File.join(node[:omnibus_updater][:cache_dir], 'chef*.deb')).each do |file|
-      unless(file.include?(node[:omnibus_updater][:version]))
-        Chef::Log.info "Deleting stale omnibus package: #{file}"
-        File.delete(file)
-      end
-    end
-  end
-end
+include_recipe 'omnibus_updater::_old_deb_cleaner'
