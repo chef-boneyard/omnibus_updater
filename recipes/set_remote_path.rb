@@ -112,7 +112,7 @@ unless(remote_omnibus_file == node[:omnibus_updater][:full_uri])
 end
 
 unless(node[:omnibus_updater][:full_version])
-  node.default[:omnibus_updater][:version] = remote_omnibus_file.scan(/chef[_-](\d+\.\d+\.\d+/).flatten.first
+  node.default[:omnibus_updater][:version] = remote_omnibus_file.scan(/chef[_-](\d+\.\d+\.\d+)/).flatten.first
   if(node[:omnibus_updater][:version].include?('-'))
     node.default[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
   else
