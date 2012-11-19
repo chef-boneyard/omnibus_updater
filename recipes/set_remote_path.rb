@@ -5,7 +5,7 @@ if(node[:omnibus_updater][:version].nil? || node[:omnibus_updater][:version_sear
   require 'rexml/document'
   pkgs_doc = REXML::Document.new(open(node[:omnibus_updater][:base_uri]))
   pkgs_avail = pkgs_doc.elements.to_a('//Contents//Key').map(&:text).find_all do |f|
-    !f.scan(/\.(rpm|deb)$/)
+    !f.scan(/\.(rpm|deb)$/).empty?
   end
 else
   if(node[:omnibus_updater][:version].include?('-'))
