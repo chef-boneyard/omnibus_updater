@@ -17,6 +17,7 @@ end
 
 platform_name = node.platform
 platform_majorversion = ""
+kernel_name = node.kernel.machine
 case node.platform_family
 when 'debian'
   if(node.platform == 'ubuntu')
@@ -31,19 +32,12 @@ when 'debian'
       raise 'Unsupported ubuntu version for deb packaged omnibus'
     end
   else
-    platform_version = case pv = node.platform_version.split('.').first
-    when '6', '5'
-      platform_majorversion << '6'
-      '6.0.5'
-    else
-      platform_majorversion << pv
-      pv
-    end
+    platform_version = platform_majorversion = node.platform_version.split('.').first
   end
 when 'fedora', 'rhel'
   platform_version = node.platform_version.split('.').first
   platform_name = 'el'
-  platform_majorversion << '6'
+  platform_majorversion << platform_version
 else
   platform_version = node.platform_version
 end
@@ -92,6 +86,8 @@ when 'rpm'
   else
     file_name = "chef-#{node[:omnibus_updater][:full_version]}.#{platform_name}#{platform_version}.#{node.kernel.machine}.rpm"
   end
+else
+  raise 'Unsupported install via provided'
 end
 
 remote_omnibus_file = if(path_name)
