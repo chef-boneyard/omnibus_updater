@@ -1,3 +1,9 @@
+v0.1.0
+======
+* Fix redhat related versioning issues
+* Remove requirement for '-1' suffix on versions
+* Initial support for automatic latest version install
+
 v0.0.5
 ======
 * Add support for Ubuntu 12.10
