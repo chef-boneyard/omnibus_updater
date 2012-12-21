@@ -20,7 +20,7 @@ to the 0.10.10 version of Chef):
 ```
 override_attributes(
   :omnibus_updater => {
-    :version => '10.12.0.rc.1'
+    :version => '10.16.2'
   }
 )
 ```
@@ -36,9 +36,11 @@ override_attributes(
 )
 ```
 ---
+
 If you are using a Chef version earlier than 10.12.0 you may want
 to take a look at the chef_gem cookbook to ensure gems are going
 where expected.
+
 ---
 
 The default recipe will install the omnibus package based
@@ -49,5 +51,5 @@ Infos
 =====
 
 * Repo: https://github.com/hw-cookbooks/omnibus_updater
-
+* IRC: Freenode @ #heavywater
 
