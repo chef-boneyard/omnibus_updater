@@ -9,7 +9,7 @@ elsif node[:omnibus_updater][:install_via]
   when 'script'
     include_recipe 'omnibus_updater::script'
   else
-    raise "Unknown omnibus update method requested: #{node[:omnibus_updater]}"
+    raise "Unknown omnibus update method requested: #{node[:omnibus_updater][:install_via]}"
   end
 else
   case node.platform_family
