@@ -67,6 +67,13 @@ Release clients
 
 Release clients can be installed via the auto-installation using `:allow_release_clients` attribute.
 
+Disable
+-------
+
+If you want to disable the updater you can set the `disabled`
+attribute to true. This might be useful if the cookbook is added
+to a role but should then be skipped for example on a Chef server.
+
 Infos
 =====
 
