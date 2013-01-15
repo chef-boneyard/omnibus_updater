@@ -4,3 +4,4 @@ default[:omnibus_updater][:base_uri] = 'http://opscode-omnitruck-release.s3.amaz
 default[:omnibus_updater][:cache_dir] = '/opt'
 default[:omnibus_updater][:cache_omnibus_installer] = false
 default[:omnibus_updater][:remove_chef_system_gem] = false
+default[:omnibus_updater][:disabled] = false

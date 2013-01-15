@@ -1,4 +1,6 @@
-if(node[:omnibus_updater][:install_via])
+if node[:omnibus_updater][:disabled]
+    Chef::Log.info 'Omnibus update disabled as requested'
+elsif node[:omnibus_updater][:install_via]
   case node[:omnibus_updater][:install_via]
   when 'deb'
     include_recipe 'omnibus_updater::deb_package'
@@ -7,7 +9,7 @@ if(node[:omnibus_updater][:install_via])
   when 'script'
     include_recipe 'omnibus_updater::script'
   else
-    raise "Unknown omnibus update method requested: #{node[:omnibus_updater]}"
+    raise "Unknown omnibus update method requested: #{node[:omnibus_updater][:install_via]}"
   end
 else
   case node.platform_family

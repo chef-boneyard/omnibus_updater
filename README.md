@@ -47,6 +47,12 @@ The default recipe will install the omnibus package based
 on system information but you can override that by using
 the `install_via` attribute which accepts: deb, rpm or script.
 
+---
+
+If you want to disable the updater you can set the `disabled`
+attribute to true. This might be useful if the cookbook is added
+to a role but should then be skipped for example on a Chef server.
+
 Infos
 =====
 
