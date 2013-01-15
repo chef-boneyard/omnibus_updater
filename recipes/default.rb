@@ -1,4 +1,6 @@
-if(node[:omnibus_updater][:install_via])
+if node[:omnibus_updater][:disabled]
+    Chef::Log.info 'Omnibus update disabled as requested'
+elsif node[:omnibus_updater][:install_via]
   case node[:omnibus_updater][:install_via]
   when 'deb'
     include_recipe 'omnibus_updater::deb_package'
