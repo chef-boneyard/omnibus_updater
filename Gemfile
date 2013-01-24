@@ -1,5 +1,3 @@
-source "https://rubygems.org"
+source :rubygems
 
-group :test do
-  gem "test-kitchen"
-end
+gem 'test-kitchen'
