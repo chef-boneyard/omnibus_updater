@@ -1,18 +1,34 @@
 # RULES
 
-if(node[:omnibus_updater][:version].nil? || node[:omnibus_updater][:version_search])
+if(node[:omnibus_updater][:version].nil? && !node[:omnibus_updater][:version_search])
+  raise "Omnibus Updater cannot determine version installation request. Please set version of enable version search"
+end
+
+if(node[:omnibus_updater][:version_search])
+  Chef::Log.warn "Omnibus Updater is set to automatically upgrade via search!"
+  if(node[:omnibus_updater][:allow_release_clients])
+    Chef::Log.warn "Omnibus Updater will allow installation of release clients found via search!"
+  end
+end
+
+if(!node[:omnibus_updater][:version].to_s.include?('-') || node[:omnibus_updater][:version_search])
   require 'open-uri'
   require 'rexml/document'
   pkgs_doc = REXML::Document.new(open(node[:omnibus_updater][:base_uri]))
   pkgs_avail = pkgs_doc.elements.to_a('//Contents//Key').map(&:text).find_all do |f|
-    !f.scan(/\.(rpm|deb)$/).empty?
+    (f.include?('.rpm') || f.include?('.deb')) && f.include?('chef') &&
+      !f.include?('server') && (node[:omnibus_updater][:allow_release_clients] || !f.include?('.rc'))
+  end
+  unless(node[:omnibus_updater][:version_search])
+    searched_ver = pkgs_avail.find_all{|x| x.include?(node[:omnibus_updater][:version]) }.sort.last
+    unless(searched_ver)
+      raise "Omnibus Updater failed to find a valid version string. Base version requested: #{node[:omnibus_updater][:version]}"
+    else
+      node.set[:omnibus_updater][:full_version] = searched_ver
+    end
   end
 else
-  if(node[:omnibus_updater][:version].include?('-'))
-    node.default[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
-  else
-    node.default[:omnibus_updater][:full_version] = "#{node[:omnibus_updater][:version]}-1"
-  end
+  node.set[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
 end
 
 platform_name = node.platform
@@ -108,11 +124,7 @@ unless(remote_omnibus_file == node[:omnibus_updater][:full_uri])
 end
 
 unless(node[:omnibus_updater][:full_version])
-  node.default[:omnibus_updater][:version] = remote_omnibus_file.scan(/chef[_-](\d+\.\d+\.\d+)/).flatten.first
-  if(node[:omnibus_updater][:version].include?('-'))
-    node.default[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
-  else
-    node.default[:omnibus_updater][:full_version] = "#{node[:omnibus_updater][:version]}-1"
-  end
+  node.set[:omnibus_updater][:version] = remote_omnibus_file.scan(%r{chef[_-](\d+.\d+.\d+-\d+)}).flatten.first
+  node.set[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
 end
 
