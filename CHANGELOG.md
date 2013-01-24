@@ -1,3 +1,8 @@
+v0.1.1
+======
+* Search for proper version suffix if not provided (removes default '-1')
+* Do not allow release clients by default when version search is enabled
+
 v0.1.0
 ======
 * Fix redhat related versioning issues

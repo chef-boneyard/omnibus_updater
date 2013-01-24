@@ -47,6 +47,26 @@ The default recipe will install the omnibus package based
 on system information but you can override that by using
 the `install_via` attribute which accepts: deb, rpm or script.
 
+Features
+========
+
+Auto version expansion
+----------------------
+
+Versions for the omnibus installer are defined as: x.y.z-n If the `:version` attribute only provides
+x.y.z the `n` value will be automatically filled in with the latest available version.
+
+Auto version searching
+----------------------
+
+Using the `:version_search` attribute, the latest stable version of the omnibus installer will
+be installed automatically as they become available.
+
+Release clients
+---------------
+
+Release clients can be installed via the auto-installation using `:allow_release_clients` attribute.
+
 Infos
 =====
 
