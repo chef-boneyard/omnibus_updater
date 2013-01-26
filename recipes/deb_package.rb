@@ -11,19 +11,20 @@ remote_file "chef omnibus_package[#{File.basename(node[:omnibus_updater][:full_u
       Chef::VERSION.to_s.scan(/\d+\.\d+\.\d+/) == node[:omnibus_updater][:full_version].scan(/\d+\.\d+\.\d+/) && OmnibusChecker.is_omnibus?
     )
   end
+  notifies :create, 'ruby_block[Omnibus Chef install notifier]', :delayed
 end
 
-# NOTE: We do not use notifications to trigger the install
-#   since they are broken with remote_file in 0.10.10
+ruby_block 'Omnibus Chef install notifier' do
+  block do
+    true
+  end
+  action :nothing
+  notifies :run, "execute[chef omnibus_install[#{node[:omnibus_updater][:full_version]}]]", :delayed
+end
+
 execute "chef omnibus_install[#{node[:omnibus_updater][:full_version]}]" do
   command "dpkg -i #{File.join(node[:omnibus_updater][:cache_dir], File.basename(node[:omnibus_updater][:full_uri]))}"
-  only_if do
-    (File.exists?(
-      File.join(node[:omnibus_updater][:cache_dir], File.basename(node[:omnibus_updater][:full_uri]))
-    ) &&
-    Chef::VERSION.to_s.scan(/\d+\.\d+\.\d+/) != node[:omnibus_updater][:full_version].scan(/\d+\.\d+\.\d+/)) ||
-    !OmnibusChecker.is_omnibus?
-  end
+  action :nothing
 end
 
 include_recipe 'omnibus_updater::old_package_cleaner'
