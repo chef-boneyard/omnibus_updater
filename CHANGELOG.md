@@ -2,6 +2,7 @@ v0.1.1
 ======
 * Search for proper version suffix if not provided (removes default '-1')
 * Do not allow release clients by default when version search is enabled
+* Push omnibus package installation to the end of run (reduces issue described in #10)
 
 v0.1.0
 ======
