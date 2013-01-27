@@ -1,5 +1,5 @@
 if node[:omnibus_updater][:disabled]
-    Chef::Log.info 'Omnibus update disabled as requested'
+  Chef::Log.warn 'Omnibus updater disabled via `disabled` attribute'
 elsif node[:omnibus_updater][:install_via]
   case node[:omnibus_updater][:install_via]
   when 'deb'
