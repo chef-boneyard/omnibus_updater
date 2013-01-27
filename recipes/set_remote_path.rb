@@ -17,14 +17,16 @@ if(!node[:omnibus_updater][:version].to_s.include?('-') || node[:omnibus_updater
   pkgs_doc = REXML::Document.new(open(node[:omnibus_updater][:base_uri]))
   pkgs_avail = pkgs_doc.elements.to_a('//Contents//Key').map(&:text).find_all do |f|
     (f.include?('.rpm') || f.include?('.deb')) && f.include?('chef') &&
-      !f.include?('server') && (node[:omnibus_updater][:allow_release_clients] || !f.include?('.rc'))
+      !f.include?('server') && (node[:omnibus_updater][:allow_release_clients] || !f.include?('.rc')) &&
+      !f.scan(/\d+\.\d+\.\d+-\d+\./).empty?
   end
   unless(node[:omnibus_updater][:version_search])
     searched_ver = pkgs_avail.find_all{|x| x.include?(node[:omnibus_updater][:version]) }.sort.last
     unless(searched_ver)
       raise "Omnibus Updater failed to find a valid version string. Base version requested: #{node[:omnibus_updater][:version]}"
     else
-      node.set[:omnibus_updater][:full_version] = searched_ver
+      node.set[:omnibus_updater][:full_version] = searched_ver.scan(/\d+\.\d+\.\d+-\d+/).first
+      node.set[:omnibus_updater][:version] = node[:omnibus_updater][:full_version].sub(/-\d+$/,'')
     end
   end
 else
