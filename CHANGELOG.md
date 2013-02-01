@@ -1,3 +1,7 @@
+v0.1.2
+======
+* Fix regression on debian package path construction (thanks [ashmere](https://github.com/ashmere))
+
 v0.1.1
 ======
 * Search for proper version suffix if not provided (removes default '-1')
