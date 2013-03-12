@@ -40,24 +40,24 @@ case node.platform_family
 when 'debian'
   if(node.platform == 'ubuntu')
     platform_version = case node.platform_version
-    when '10.10', '10.04'
-       platform_majorversion << '10.04'
-      '10.04'
-    when '12.10', '12.04', '11.10', '11.04'
-       platform_majorversion << '11.04'
-      '11.04'
-    else
-      raise 'Unsupported ubuntu version for deb packaged omnibus'
-    end
+                       when '10.10', '10.04'
+                         platform_majorversion << '10.04'
+                         '10.04'
+                       when '12.10', '12.04', '11.10', '11.04'
+                         platform_majorversion << '11.04'
+                         '11.04'
+                       else
+                         raise 'Unsupported ubuntu version for deb packaged omnibus'
+                       end
   else
     platform_version = case pv = node.platform_version.split('.').first
-    when '6', '5'
-      platform_majorversion << '6'
-      '6.0.5'
-    else
-      platform_majorversion << pv
-      pv
-    end
+                       when '6', '5'
+                         platform_majorversion << '6'
+                         '6.0.5'
+                       else
+                         platform_majorversion << pv
+                         pv
+                       end
   end
 when 'fedora', 'rhel'
   platform_version = node.platform_version.split('.').first
@@ -71,20 +71,20 @@ if(node[:omnibus_updater][:install_via])
   install_via = node[:omnibus_updater][:install_via]
 else
   install_via = case node.platform_family
-  when 'debian'
-    'deb'
-  when 'fedora', 'rhel', 'centos'
-    'rpm'
-  else
-    raise 'Unsupported omnibus install method requested'
-  end
+                when 'debian'
+                  'deb'
+                when 'fedora', 'rhel', 'centos'
+                  'rpm'
+                else
+                  raise 'Unsupported omnibus install method requested'
+                end
 end
 case install_via
 when 'deb'
   if(pkgs_avail)
     path_name = pkgs_avail.find_all{ |path|
       ver = node[:omnibus_updater][:version] || '.'
-      path.include?('.deb') && path.include?(platform_name) && 
+      path.include?('.deb') && path.include?(platform_name) &&
       path.include?(platform_version) && path.include?(node.kernel.machine) &&
       path.include?(ver)
     }.sort.last
@@ -104,36 +104,45 @@ when 'rpm'
   if(pkgs_avail)
     path_name = pkgs_avail.find_all{ |path|
       ver = node[:omnibus_updater][:version] || '.'
-      path.include?('.rpm') && path.include?(platform_name) && 
+      path.include?('.rpm') && path.include?(platform_name) &&
       path.include?(platform_version) && path.include?(node.kernel.machine) &&
       path.include?(ver)
     }.sort.last
   else
     file_name = "chef-#{node[:omnibus_updater][:full_version]}.#{platform_name}#{platform_version}.#{node.kernel.machine}.rpm"
   end
+when 'script'
+  if node[:omnibus_updater][:full_uri]
+    Chef::Log.info "Omnibus_updater will use full script path at: #{node[:omnibus_updater][:full_uri]}"
+  else
+    raise "Attribute :full_uri is not set using default install.sh"
+    node.set[:omnibus_updater][:full_uri] = "https://www.opscode.com/chef/install.sh"
+  end
 else
   raise 'Unsupported install via provided'
 end
 
-remote_omnibus_file = if(path_name)
-    File.join(node[:omnibus_updater][:base_uri], path_name)
-  else
-    File.join(
-      node[:omnibus_updater][:base_uri],
-      platform_name,
-      platform_majorversion,
-      kernel_name,
-      file_name
-    )
+if not node[:omnibus_updater][:install_via] == 'script'
+  remote_omnibus_file = if(path_name)
+                          File.join(node[:omnibus_updater][:base_uri], path_name)
+                        else
+                          File.join(
+                                    node[:omnibus_updater][:base_uri],
+                                    platform_name,
+                                    platform_majorversion,
+                                    kernel_name,
+                                    file_name
+                                    )
+                        end
+
+
+  unless(remote_omnibus_file == node[:omnibus_updater][:full_uri])
+    node.override[:omnibus_updater][:full_uri] = remote_omnibus_file
+    Chef::Log.info "Omnibus remote file location: #{remote_omnibus_file}"
   end
 
-unless(remote_omnibus_file == node[:omnibus_updater][:full_uri])
-  node.override[:omnibus_updater][:full_uri] = remote_omnibus_file
-  Chef::Log.info "Omnibus remote file location: #{remote_omnibus_file}"
+  unless(node[:omnibus_updater][:full_version])
+    node.set[:omnibus_updater][:version] = remote_omnibus_file.scan(%r{chef[_-](\d+.\d+.\d+-\d+)}).flatten.first
+    node.set[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
+  end
 end
-
-unless(node[:omnibus_updater][:full_version])
-  node.set[:omnibus_updater][:version] = remote_omnibus_file.scan(%r{chef[_-](\d+.\d+.\d+-\d+)}).flatten.first
-  node.set[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
-end
-
