@@ -1,2 +1,2 @@
-node.set[:omnibus_updater][:version] = '10.18.0'
+node.set[:omnibus_updater][:version] = '11.2.0'
 include_recipe "omnibus_updater"
