@@ -1,3 +1,8 @@
+v0.2.0
+======
+* Use omnitruck client for url generation for package fetching
+* Use `prerelease` in favor of `allow_release_clients`
+
 v0.1.2
 ======
 * Fix regression on debian package path construction (thanks [ashmere](https://github.com/ashmere))
