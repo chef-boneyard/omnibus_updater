@@ -14,6 +14,8 @@ execute "omnibus_install[#{File.basename(remote_path)}]" do
     command "dpkg -i #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.rpm'
     command "rpm -Uvh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+  when '.sh'
+    command "/bin/sh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   else
     raise "Unknown package type encountered for install: #{File.extname(remote_path)}"
   end

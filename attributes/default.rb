@@ -1,4 +1,5 @@
-default[:omnibus_updater][:version] = '11.4.0'
+default[:omnibus_updater][:version] = nil
+default[:omnibus_updater][:force_latest] = false
 default[:omnibus_updater][:cache_dir] = '/opt'
 default[:omnibus_updater][:cache_omnibus_installer] = false
 default[:omnibus_updater][:remove_chef_system_gem] = false

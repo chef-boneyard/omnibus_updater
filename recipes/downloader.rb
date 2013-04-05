@@ -3,7 +3,7 @@
 
 remote_path = OmniTrucker.url(
   OmniTrucker.build_url(node,
-    :version => node[:omnibus_updater][:version].sub(/\-.+$/, ''),
+    :version => node[:omnibus_updater][:force_latest] ? nil : node[:omnibus_updater][:version].sub(/\-.+$/, ''),
     :preview => node[:omnibus_updater][:preview]
   )
 )
