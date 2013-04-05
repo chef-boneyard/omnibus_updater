@@ -1,16 +1,17 @@
 module OmnibusTrucker
   class << self
     URL_MAP = {
-      :p => :platform, :pv => :version, :m => :machine,
-      :version => :version, :prerelease => :prerelease,
+      :p => :platform, :pv => :platform_version, :m => :machine,
+      :v => :version, :prerelease => :prerelease,
       :nightlies => :nightlies
     }
 
     def build_url(*opts)
+      args = node = nil
       opts.each do |o|
-        if(o.kind_of(Hash))
+        if(o.kind_of?(Hash))
           args = o
-        elsif(o.kind_of(Chef::Node))
+        elsif(o.kind_of?(Chef::Node))
           node = o
         else
           raise ArgumentError.new "Provided argument is not allowed: #{o.class}"
@@ -28,29 +29,29 @@ module OmnibusTrucker
     end
 
     def collect_attributes(node, args={})
-      set = Hash.new(*(
+      set = Hash[*(
           [:platform_family, :platform, :platform_version].map do |k|
             [k, args[k] || node[k]]
           end.flatten.compact
-      ))
+      )]
       unless(@attrs)
         if(set[:platform_family] == 'rhel')
-          @attrs = {:platform => 'el', :version => set[:platform_version].to_i}
+          @attrs = {:platform => 'el', :platform_version => set[:platform_version].to_i}
         else
-          @attrs = {:platform => set[:platform], :version => set[:platform_version]}
+          @attrs = {:platform => set[:platform], :platform_version => set[:platform_version]}
         end
         @attrs[:machine] = args[:machine] || node[:kernel][:machine]
       end
       @attrs
     end
 
-    def get_url(url_or_node)
+    def url(url_or_node)
       if(url_or_node.is_a?(Chef::Node))
         url = build_url(node)
       end
       u = URI.parse(url || url_or_node)
       h = Net::HTTP.new(u.host, u.port)
-      r = http.get_head(u.request_uri)
+      r = h.head(u.request_uri)
       if(r.kind_of?(Net::HTTPRedirection))
         r['location']
       end

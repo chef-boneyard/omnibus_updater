@@ -1,5 +1,5 @@
 include_recipe 'omnibus_updater'
-remote_path = node.run_state[:omnibus_remote]
+remote_path = node[:omnibus_updater][:full_url]
 
 ruby_block 'Omnibus Chef install notifier' do
   block{ true }
