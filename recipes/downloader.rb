@@ -20,6 +20,7 @@ if(remote_path)
     path File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))
     source remote_path
     backup false
+    action :create_if_missing
   end
   
 else
