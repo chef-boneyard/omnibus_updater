@@ -55,10 +55,10 @@ longer exist. The currently running instance can encounter unexpected states bec
 of this. To prevent this, the updater will attempt to kill the Chef instance so
 that it can be restarted in a normal state.
 
-Preview
+Prerelease
 --------
 
-Preview releases can be installed via the auto-installation using `preview` attribute.
+Prereleases can be installed via the auto-installation using `prerelease` attribute.
 
 Disable
 -------
