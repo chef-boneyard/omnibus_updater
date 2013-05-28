@@ -1,3 +1,7 @@
+v0.2.2
+======
+* Use chef internals for interactions with omnitruck to provide proper proxy support (#19)
+
 v0.2.0
 ======
 * Use omnitruck client for url generation for package fetching
