@@ -13,7 +13,7 @@ else
 end
 
 if(remote_path)
-  node.set[:omnibus_updater][:full_url] = remote_path
+  node.default[:omnibus_updater][:full_url] = remote_path
   Chef::Log.info "Omnibus Updater remote path: #{remote_path}"
 
   remote_file "omnibus_remote[#{File.basename(remote_path)}]" do
