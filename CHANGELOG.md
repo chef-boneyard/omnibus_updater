@@ -1,4 +1,4 @@
-v0.2.2
+v0.2.3
 ======
 * Use chef internals for interactions with omnitruck to provide proper proxy support (#19)
 
