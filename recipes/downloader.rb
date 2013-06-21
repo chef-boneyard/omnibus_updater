@@ -21,8 +21,11 @@ if(remote_path)
     source remote_path
     backup false
     action :create_if_missing
+    only_if do
+      node[:omnibus_updater][:always_download] ||
+        Chef::VERSION != node[:omnibus_updater][:version].sub(/\-.+$/, '')
+    end
   end
-  
 else
   Chef::Log.warn 'Failed to retrieve omnibus download URL'
 end
