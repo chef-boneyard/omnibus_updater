@@ -1,3 +1,8 @@
+v0.2.4
+======
+* Only download omnibus package if version difference detected (#20 #22 #23)
+* Provide attribute for always downloading package even if version matches
+
 v0.2.3
 ======
 * Use chef internals for interactions with omnitruck to provide proper proxy support (#19)
