@@ -72,4 +72,4 @@ Infos
 
 * Repo: https://github.com/hw-cookbooks/omnibus_updater
 * IRC: Freenode @ #heavywater
-
+* Cookbook: http://ckbk.it/omnibus_updater
