@@ -4,9 +4,10 @@
 if(node[:omnibus_updater][:direct_url])
   remote_path = node[:omnibus_updater][:direct_url]
 else
+  version = node[:omnibus_updater][:version] || ''
   remote_path = OmnibusTrucker.url(
     OmnibusTrucker.build_url(node,
-      :version => node[:omnibus_updater][:force_latest] ? nil : node[:omnibus_updater][:version].sub(/\-.+$/, ''),
+      :version => node[:omnibus_updater][:force_latest] ? nil : version.sub(/\-.+$/, ''),
       :prerelease => node[:omnibus_updater][:preview]
     ), node
   )
@@ -22,8 +23,10 @@ if(remote_path)
     backup false
     action :create_if_missing
     only_if do
-      node[:omnibus_updater][:always_download] ||
-        Chef::VERSION != node[:omnibus_updater][:version].sub(/\-.+$/, '')
+      unless(version = node[:omnibus_updater][:version])
+        version = node[:omnibus_updater][:full_url].scan(%r{chef_(\d+\.\d+.\d+)}).flatten.first
+      end
+      node[:omnibus_updater][:always_download] || Chef::VERSION != version.to_s.sub(/\-.+$/, '')
     end
   end
 else
