@@ -48,7 +48,7 @@ attribute by setting the `force_latest` attribute.
 Chef Killing
 ------------
 
-By default the omnibus updater will kill the chef instance by raising and exception.
+By default the omnibus updater will kill the chef instance by raising an exception.
 You can turn this off using the `kill_chef_on_upgrade` attribute. It is not
 recommended to turn this off. Internal chef libraries may change, move, or no
 longer exist. The currently running instance can encounter unexpected states because
