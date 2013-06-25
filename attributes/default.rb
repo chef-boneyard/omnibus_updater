@@ -6,4 +6,4 @@ default[:omnibus_updater][:remove_chef_system_gem] = false
 default[:omnibus_updater][:prerelease] = false
 default[:omnibus_updater][:disabled] = false
 default[:omnibus_updater][:kill_chef_on_upgrade] = true
-default[:omnibus_updater][:always_download] = true
+default[:omnibus_updater][:always_download] = false
