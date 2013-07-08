@@ -15,7 +15,6 @@ end
 
 if(remote_path)
   node.set[:omnibus_updater][:full_url] = remote_path
-  Chef::Log.info "Omnibus Updater remote path: #{remote_path}"
 
   remote_file "omnibus_remote[#{File.basename(remote_path)}]" do
     path File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))
@@ -26,7 +25,11 @@ if(remote_path)
       unless(version = node[:omnibus_updater][:version])
         version = node[:omnibus_updater][:full_url].scan(%r{chef_(\d+\.\d+.\d+)}).flatten.first
       end
-      node[:omnibus_updater][:always_download] || Chef::VERSION != version.to_s.sub(/\-.+$/, '')
+      res = node[:omnibus_updater][:always_download] || Chef::VERSION != version.to_s.sub(/\-.+$/, '')
+      if(res)
+        Chef::Log.info "Omnibus Updater remote path: #{remote_path}"
+      end
+      res
     end
   end
 else
