@@ -37,6 +37,8 @@ module OmnibusTrucker
       unless(@attrs)
         if(set[:platform_family] == 'rhel')
           @attrs = {:platform => 'el', :platform_version => set[:platform_version].to_i}
+        elsif(set[:platform] == 'debian')
+          @attrs = {:platform => set[:platform], :platform_version => set[:platform_version].to_i}
         else
           @attrs = {:platform => set[:platform], :platform_version => set[:platform_version]}
         end
