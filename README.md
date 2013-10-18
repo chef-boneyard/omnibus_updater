@@ -67,6 +67,14 @@ If you want to disable the updater you can set the `disabled`
 attribute to true. This might be useful if the cookbook is added
 to a role but should then be skipped for example on a Chef server.
 
+Prevent Downgrade
+-----------------
+
+If you want to prevent the updater from downgrading chef on a node, you 
+can set the `prevent_downgrade` attribute to true.  This can be useful
+for testing new versions manually.  Note that the `always_download` 
+attribute takes precedence if set.
+
 Infos
 =====
 
