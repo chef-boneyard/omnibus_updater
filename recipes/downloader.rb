@@ -26,12 +26,17 @@ if(remote_path)
       unless(version = node[:omnibus_updater][:version])
         version = node[:omnibus_updater][:full_url].scan(%r{chef_(\d+\.\d+.\d+)}).flatten.first
       end
-      if(node[:omnibus_updater][:prevent_downgrade])
-        # Return true if the new version is newer
-        Gem::Version.new(version) > Gem::Version.new(Chef::VERSION)
+      if(node[:omnibus_updater][:always_download])
+        # warn if there may be unexpected behavior
+        node[:omnibus_updater][:prevent_downgrade] && 
+          Chef::Log.warn("omnibus_updater: prevent_downgrade is ignored when always_download is true")
+        true
+      elsif(node[:omnibus_updater][:prevent_downgrade])
+        # Return true if the found/specified version is newer
+        Gem::Version.new(version.to_s.sub(/\-.+$/, '')) > Gem::Version.new(Chef::VERSION)
       else          
-        # Default behavior is to fall back to installing if it doesn't match, or if always download is on
-        node[:omnibus_updater][:always_download] || Chef::VERSION != version.to_s.sub(/\-.+$/, '')
+        # default is to install if the versions don't match
+        Chef::VERSION != version.to_s.sub(/\-.+$/, '')
       end
     end
   end
