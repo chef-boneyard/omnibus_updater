@@ -34,13 +34,10 @@ module OmnibusTrucker
             [k, args[k] || node[k]]
           end.flatten.compact
       )]
-      unless(@attrs)
-        if(set[:platform_family] == 'rhel')
-          @attrs = {:platform => 'el', :platform_version => set[:platform_version].to_i}
-        else
-          @attrs = {:platform => set[:platform], :platform_version => set[:platform_version]}
-        end
+      unless @attrs
+        @attrs = {:platform => (set[:platform_family] == 'rhel' ? 'el' : set[:platform])}
         @attrs[:machine] = args[:machine] || node[:kernel][:machine]
+        @attrs[:platform_version] = set[:platform_version].to_i
       end
       @attrs
     end
