@@ -20,6 +20,9 @@ execute "omnibus_install[#{File.basename(remote_path)}]" do
     raise "Unknown package type encountered for install: #{File.extname(remote_path)}"
   end
   action :nothing
+  if node[:omnibus_updater][:restart_chef_service]
+      notifies :restart, "service[chef-client]", :immediately
+  end
   notifies :create, 'ruby_block[omnibus chef killer]', :immediately
 end
 
