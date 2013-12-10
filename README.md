@@ -55,6 +55,11 @@ longer exist. The currently running instance can encounter unexpected states bec
 of this. To prevent this, the updater will attempt to kill the Chef instance so
 that it can be restarted in a normal state.
 
+Restart chef-client Service
+---------------------------
+
+Use the `restart_chef_service` attribute to restart chef-client if you have it running as a service.
+
 Prerelease
 --------
 
