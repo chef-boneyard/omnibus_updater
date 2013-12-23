@@ -1,3 +1,11 @@
+v0.2.6
+======
+* Work with amazon linux (thanks @thommay)
+* Disable updates on debian 5 (thanks @ianand0204)
+* Only use major version on debian systems (thanks @kvs)
+* Allow prevention of downgrades (thanks @buysse)
+* Add support for restarting chef service after upgrade (thanks @andrewfraley)
+
 v0.2.4
 ======
 * Only download omnibus package if version difference detected (#20 #22 #23)
