@@ -1,3 +1,7 @@
+v0.2.8
+======
+* Always download the package (thanks @miketheman for swiftly pointing out the issue!)
+
 v0.2.6
 ======
 * Work with amazon linux (thanks @thommay)
