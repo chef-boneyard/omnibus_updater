@@ -8,6 +8,11 @@ ruby_block 'Omnibus Chef install notifier' do
   notifies :run, "execute[omnibus_install[#{File.basename(remote_path)}]]", :delayed
 end
 
+file '/tmp/nocheck' do
+  content 'conflict=nocheck\naction=nocheck'
+  only_if { node['os'] =~ /^solaris/ }
+end
+
 execute "omnibus_install[#{File.basename(remote_path)}]" do
   case File.extname(remote_path)
   when '.deb'
@@ -16,6 +21,8 @@ execute "omnibus_install[#{File.basename(remote_path)}]" do
     command "rpm -Uvh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.sh'
     command "/bin/sh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+  when '.solaris'
+    command "pkgadd -n -d #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))} -a /tmp/nocheck chef"
   else
     raise "Unknown package type encountered for install: #{File.extname(remote_path)}"
   end
