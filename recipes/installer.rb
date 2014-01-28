@@ -1,16 +1,19 @@
 include_recipe 'omnibus_updater'
 remote_path = node[:omnibus_updater][:full_url].to_s
 
-ruby_block 'Omnibus Chef install notifier' do
-  block{ true }
-  action :nothing
-  subscribes :create, "remote_file[omnibus_remote[#{File.basename(remote_path)}]]", :immediately
-  notifies :run, "execute[omnibus_install[#{File.basename(remote_path)}]]", :delayed
-end
-
 file '/tmp/nocheck' do
   content 'conflict=nocheck\naction=nocheck'
   only_if { node['os'] =~ /^solaris/ }
+end
+
+ruby_block 'omnibus chef killer' do
+  block do
+    raise 'New omnibus chef version installed. Killing Chef run!'
+  end
+  action :nothing
+  only_if do
+    node[:omnibus_updater][:kill_chef_on_upgrade]
+  end
 end
 
 execute "omnibus_install[#{File.basename(remote_path)}]" do
@@ -28,19 +31,16 @@ execute "omnibus_install[#{File.basename(remote_path)}]" do
   end
   action :nothing
   if(node[:omnibus_updater][:restart_chef_service])
-    notifies :restart, "service[chef-client]", :immediately
+    notifies :restart, resources(:service => 'chef-client'), :immediately
   end
-  notifies :create, 'ruby_block[omnibus chef killer]', :immediately
+  notifies :create, resources(:ruby_block => 'omnibus chef killer'), :immediately
 end
 
-ruby_block 'omnibus chef killer' do
-  block do
-    raise 'New omnibus chef version installed. Killing Chef run!'
-  end
+ruby_block 'Omnibus Chef install notifier' do
+  block{ true }
   action :nothing
-  only_if do
-    node[:omnibus_updater][:kill_chef_on_upgrade]
-  end
+  subscribes :create, resources(:remote_file => "omnibus_remote[#{File.basename(remote_path)}]"), :immediately
+  notifies :run, resources(:execute => "omnibus_install[#{File.basename(remote_path)}]"), :delayed
 end
 
 include_recipe 'omnibus_updater::old_package_cleaner'
