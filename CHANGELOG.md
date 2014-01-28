@@ -1,3 +1,9 @@
+v1.0.0
+======
+* Breaking change: `:always_download` is now defaulted to false
+* Add solaris package install support (#37 thanks @jtimberman)
+* Update notifies/subscribes usage to support older Chefs (#38 thanks @spheromak)
+
 v0.2.8
 ======
 * Always download the package (thanks @miketheman for swiftly pointing out the issue!)
