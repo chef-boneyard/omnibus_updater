@@ -29,11 +29,11 @@ module OmnibusTrucker
     end
 
     def collect_attributes(node, args={})
-      set = Hash[*(
-          [:platform_family, :platform, :platform_version].map do |k|
-            [k, args[k] || node[k]]
-          end.flatten.compact
-      )]
+      set = Mash[
+        [:platform_family, :platform, :platform_version].map do |k|
+          [k, args[k] || node[k]]
+        end
+      ]
       unless(@attrs)
         if(set[:platform] == 'amazon')
           @attrs = {:platform => 'el', :platform_version => 6}
