@@ -21,7 +21,7 @@ execute "omnibus_install[#{File.basename(remote_path)}]" do
   when '.deb'
     command "dpkg -i #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.rpm'
-    command "rpm -Uvh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+    command "rpm -Uvh --oldpackage #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.sh'
     command "/bin/sh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.solaris'
