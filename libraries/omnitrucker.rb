@@ -41,6 +41,8 @@ module OmnibusTrucker
           @attrs = {:platform => 'el', :platform_version => set[:platform_version].to_i}
         elsif(set[:platform] == 'debian')
           @attrs = {:platform => set[:platform], :platform_version => set[:platform_version].to_i}
+        elsif(set[:platform_family] == 'mac_os_x')
+          @attrs = {:platform => set[:platform_family], :platform_version => [set[:platform_version].to_f, 10.7].min}
         else
           @attrs = {:platform => set[:platform], :platform_version => set[:platform_version]}
         end
