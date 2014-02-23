@@ -6,6 +6,10 @@ file '/tmp/nocheck' do
   only_if { node['os'] =~ /^solaris/ }
 end
 
+service "chef-client" do
+  action :nothing
+end
+
 ruby_block 'omnibus chef killer' do
   block do
     raise 'New omnibus chef version installed. Killing Chef run!'
