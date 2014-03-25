@@ -41,6 +41,7 @@ ruby_block 'Omnibus Chef install notifier' do
   action :nothing
   subscribes :create, resources(:remote_file => "omnibus_remote[#{File.basename(remote_path)}]"), :immediately
   notifies :run, resources(:execute => "omnibus_install[#{File.basename(remote_path)}]"), :delayed
+  only_if { node['chef_packages']['chef']['version'] != node['omnibus_updater']['version'] }
 end
 
 include_recipe 'omnibus_updater::old_package_cleaner'
