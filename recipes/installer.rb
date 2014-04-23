@@ -6,7 +6,7 @@ file '/tmp/nocheck' do
   only_if { node['os'] =~ /^solaris/ }
 end
 
-service "chef-client" do
+service 'chef-client' do
   action :nothing
 end
 
