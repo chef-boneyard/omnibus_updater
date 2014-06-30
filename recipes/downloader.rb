@@ -23,7 +23,12 @@ if(remote_path)
     action :create_if_missing
     only_if do
       unless(version = node[:omnibus_updater][:version])
-        version = node[:omnibus_updater][:full_url].scan(%r{chef_(\d+\.\d+.\d+)}).flatten.first
+        case node['platform_family']
+        when "windows"
+          version = node[:omnibus_updater][:full_url].scan(%r{chef-client-(\d+\.\d+.\d+)}).flatten.first
+        else
+          version = node[:omnibus_updater][:full_url].scan(%r{chef_(\d+\.\d+.\d+)}).flatten.first
+        end
       end
       if(node[:omnibus_updater][:always_download])
         # warn if there may be unexpected behavior
