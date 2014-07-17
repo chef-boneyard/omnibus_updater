@@ -3,6 +3,7 @@ if(node[:omnibus_updater][:disabled])
 elsif(node[:platform] == 'debian' && Gem::Version.new(node[:platform_version]) < Gem::Version.new('6.0.0'))
   Chef::Log.warn 'Omnibus updater does not support Debian 5'
 elsif(node[:platform] == 'windows')
+  include_recipe 'omnibus_updater::downloader'
   include_recipe 'omnibus_updater::windows_installer'
 else
   include_recipe 'omnibus_updater::downloader'
