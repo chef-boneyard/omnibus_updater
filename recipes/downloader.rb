@@ -23,7 +23,7 @@ if(remote_path)
     action :create_if_missing
     only_if do
       unless(version = node[:omnibus_updater][:version])
-        version = node[:omnibus_updater][:full_url].scan(%r{chef[_,-](\d+\.\d+.\d+)}).flatten.first
+        version = node[:omnibus_updater][:full_url].scan(%r{chef[_-](\d+\.\d+.\d+)}).flatten.first
       end
       if(node[:omnibus_updater][:always_download])
         # warn if there may be unexpected behavior
