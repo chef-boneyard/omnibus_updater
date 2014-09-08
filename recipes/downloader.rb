@@ -25,7 +25,7 @@ if(remote_path)
       unless(version = node[:omnibus_updater][:version])
         case node['platform_family']
         when 'windows'
-          version = node[:omnibus_updater][:full_url].scan(%r{chef-client-(\d+\.\d+.\d+)}).flatten.first
+          version = node[:omnibus_updater][:full_url].scan(%r{chef-windows|client-(\d+\.\d+.\d+)}).flatten.first
         else
           version = node[:omnibus_updater][:full_url].scan(%r{chef_(\d+\.\d+.\d+)}).flatten.first
         end
