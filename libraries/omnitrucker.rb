@@ -41,6 +41,8 @@ module OmnibusTrucker
           @attrs = {:platform => 'el', :platform_version => set[:platform_version].to_i}
         elsif(set[:platform] == 'debian')
           @attrs = {:platform => set[:platform], :platform_version => set[:platform_version].to_i}
+        elsif(set[:platform_family] == 'windows')
+          @attrs ={:platform => set[:platform], :platform_version => '2008r2'}
         else
           @attrs = {:platform => set[:platform], :platform_version => set[:platform_version]}
         end
