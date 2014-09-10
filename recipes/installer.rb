@@ -6,6 +6,10 @@ file '/tmp/nocheck' do
   only_if { node['os'] =~ /^solaris/ }
 end
 
+service 'chef-client' do
+  action :nothing
+end
+
 ruby_block 'omnibus chef killer' do
   block do
     raise 'New omnibus chef version installed. Killing Chef run!'
@@ -21,7 +25,7 @@ execute "omnibus_install[#{File.basename(remote_path)}]" do
   when '.deb'
     command "dpkg -i #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.rpm'
-    command "rpm -Uvh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+    command "rpm -Uvh --oldpackage #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.sh'
     command "/bin/sh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.solaris'
@@ -41,6 +45,7 @@ ruby_block 'Omnibus Chef install notifier' do
   action :nothing
   subscribes :create, resources(:remote_file => "omnibus_remote[#{File.basename(remote_path)}]"), :immediately
   notifies :run, resources(:execute => "omnibus_install[#{File.basename(remote_path)}]"), :delayed
+  only_if { node['chef_packages']['chef']['version'] != node['omnibus_updater']['version'] }
 end
 
 include_recipe 'omnibus_updater::old_package_cleaner'

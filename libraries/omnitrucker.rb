@@ -37,14 +37,19 @@ module OmnibusTrucker
       unless(@attrs)
         if(set[:platform] == 'amazon')
           @attrs = {:platform => 'el', :platform_version => 6}
+        elsif(set[:platform_family] == 'fedora')
+          @attrs = {:platform => 'el', :platform_version => 6}
         elsif(set[:platform_family] == 'rhel')
           @attrs = {:platform => 'el', :platform_version => set[:platform_version].to_i}
         elsif(set[:platform] == 'debian')
           @attrs = {:platform => set[:platform], :platform_version => set[:platform_version].to_i}
+        elsif(set[:platform_family] == 'mac_os_x')
+          @attrs = {:platform => set[:platform_family], :platform_version => [set[:platform_version].to_f, 10.7].min}
         else
           @attrs = {:platform => set[:platform], :platform_version => set[:platform_version]}
         end
         @attrs[:machine] = args[:machine] || node[:kernel][:machine]
+        @attrs[:machine] = "i386" if(set[:platform_family] == 'solaris2' && @attrs[:machine] == "i86pc")
       end
       @attrs
     end

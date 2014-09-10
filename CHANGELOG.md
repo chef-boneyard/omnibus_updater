@@ -1,3 +1,10 @@
+v1.0.2
+======
+* Maintenance updates
+* Support for Fedora
+* omnitrucker solaris update
+* bug fixes
+
 v1.0.0
 ======
 * Breaking change: `:always_download` is now defaulted to false

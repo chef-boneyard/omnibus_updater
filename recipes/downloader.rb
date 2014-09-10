@@ -20,10 +20,11 @@ if(remote_path)
     path File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))
     source remote_path
     backup false
+    checksum node[:omnibus_updater][:checksum] if node[:omnibus_updater][:checksum]
     action :create_if_missing
     only_if do
       unless(version = node[:omnibus_updater][:version])
-        version = node[:omnibus_updater][:full_url].scan(%r{chef_(\d+\.\d+.\d+)}).flatten.first
+        version = node[:omnibus_updater][:full_url].scan(%r{chef[_-](\d+\.\d+.\d+)}).flatten.first
       end
       if(node[:omnibus_updater][:always_download])
         # warn if there may be unexpected behavior
