@@ -61,12 +61,21 @@ attribute by setting the `force_latest` attribute.
 Chef Killing
 ------------
 
-By default the omnibus updater will kill the chef instance by raising an exception.
-You can turn this off using the `kill_chef_on_upgrade` attribute. It is not
-recommended to turn this off. Internal chef libraries may change, move, or no
-longer exist. The currently running instance can encounter unexpected states because
-of this. To prevent this, the updater will attempt to kill the Chef instance so
-that it can be restarted in a normal state.
+By default the omnibus updater will re-exec chef to continue the run using the
+new version.  Older versions used to just kill the chef-client and abort the
+run, but exec()ing Chef allows runs to complete without errors being bubbled up
+the stack. You can choose between these behaviors by using the
+`upgrade_behavior` attribute.
+
+* If set to 'kill', the run will be aborted by raising an exception.
+* If set to 'exec', the run will be resumed by re-exec'ing chef-client. This
+  doesn't work in solo mode; when using chef-solo, setting this attribute to
+  'exec' is equivalent to 'kill'. You can customize the command that is exec'd
+  by setting the `exec_command` attribute.
+* If set to anything else, the run is not aborted. Doing this is not
+  recommended. Internal chef libraries may change, move, or no
+  longer exist. The currently running instance can encounter unexpected states
+  because of this, so using 'kill' or 'exec' is highly recommended.
 
 Restart chef-client Service
 ---------------------------
@@ -88,9 +97,9 @@ to a role but should then be skipped for example on a Chef server.
 Prevent Downgrade
 -----------------
 
-If you want to prevent the updater from downgrading chef on a node, you 
+If you want to prevent the updater from downgrading chef on a node, you
 can set the `prevent_downgrade` attribute to true.  This can be useful
-for testing new versions manually.  Note that the `always_download` 
+for testing new versions manually.  Note that the `always_download`
 attribute takes precedence if set.
 
 Infos
