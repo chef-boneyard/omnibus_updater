@@ -20,16 +20,26 @@ ruby_block 'omnibus chef killer' do
   end
 end
 
-execute "omnibus_install[#{File.basename(remote_path)}]" do
+bash "omnibus_install[#{File.basename(remote_path)}]" do
   case File.extname(remote_path)
   when '.deb'
-    command "dpkg -i #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+    code "dpkg -i #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.rpm'
-    command "rpm -Uvh --oldpackage #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+    # To work around upgrading from cursed versions, install the RPM twice.
+    # The first run will unpack the new version and run a bad postun on the
+    # old version. The second run will re-unpack the new version.
+    # The bad postun script will delete the /usr/bin symlinks for Chef.
+    # Re-unpacking the good version ensures the good postun script is run,
+    # and restores the symlinks. See CHEF-3022 and CHEF-5208 for more.
+    code <<-EOH
+for i in 1 2; do
+  rpm -Uvh --oldpackage --replacepkgs #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}
+done
+EOH
   when '.sh'
-    command "/bin/sh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+    code "/bin/sh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.solaris'
-    command "pkgadd -n -d #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))} -a /tmp/nocheck chef"
+    code "pkgadd -n -d #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))} -a /tmp/nocheck chef"
   else
     raise "Unknown package type encountered for install: #{File.extname(remote_path)}"
   end
