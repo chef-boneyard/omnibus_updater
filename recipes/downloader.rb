@@ -24,16 +24,16 @@ if(remote_path)
     action :create_if_missing
     only_if do
       unless(version = node[:omnibus_updater][:version])
-        version = node[:omnibus_updater][:full_url].scan(%r{chef[_-](\d+\.\d+.\d+)}).flatten.first
+        version = node[:omnibus_updater][:full_url].scan(%r{chef(-windows)[_-](\d+\.\d+.\d+)}).flatten[1]
       end
-      if(node[:omnibus_updater][:always_download])
+      if (node[:omnibus_updater][:always_download] and not platform?('windows'))
         # warn if there may be unexpected behavior
         node[:omnibus_updater][:prevent_downgrade] &&
           Chef::Log.warn("omnibus_updater: prevent_downgrade is ignored when always_download is true")
         Chef::Log.debug "Omnibus Updater remote path: #{remote_path}"
         true
-      elsif(node[:omnibus_updater][:prevent_downgrade])
-        # Return true if the found/specified version is newer
+      elsif node[:omnibus_updater][:prevent_downgrade] or platform?('windows')
+        # Return true if the found/specified version is newer (no support for downgrade in windows yet...)
         Gem::Version.new(version.to_s.sub(/\-.+$/, '')) > Gem::Version.new(Chef::VERSION)
       else
         # default is to install if the versions don't match
