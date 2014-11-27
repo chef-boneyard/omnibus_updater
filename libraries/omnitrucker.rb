@@ -62,11 +62,10 @@ module OmnibusTrucker
         url = url_or_node
         raise "Node instance is required for Omnitruck.url!" unless node
       end
-      request = Chef::REST::RESTRequest.new(:head, URI.parse(url), nil)
+      request = Chef::REST::RESTRequest.new(:get, URI.parse(url), nil)
       result = request.call
-      if(result.kind_of?(Net::HTTPRedirection))
-        result['location']
-      end
+      meta = Hash[result.body.split("\n").map { |ln| ln.split("\t", 2) }]
+      return meta['url']
     end
 
   end
