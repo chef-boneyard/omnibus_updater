@@ -1,0 +1,7 @@
+@ECHO OFF
+net stop chef-client
+REM Do not capture errors when stopping chef, as it could be already stopped and that will return error
+msiexec.exe /quiet /passive /package "<%= @msi_installer %>" ADDLOCAL="ChefClientFeature,ChefServiceFeature"
+<% if node[:omnibus_updater][:restart_chef_service] and @zabbix_server -%>
+net start chef-client
+<% end -%>

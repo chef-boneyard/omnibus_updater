@@ -64,6 +64,9 @@ module OmnibusTrucker
           @attrs = {:platform => set[:platform], :platform_version => set[:platform_version].to_i}
         elsif(set[:platform_family] == 'mac_os_x')
           @attrs = {:platform => set[:platform_family], :platform_version => [set[:platform_version].to_f, 10.7].min}
+        elsif(set[:platform_family] == 'windows')
+          platform_version = node[:omnibus_updater][:win_versions][set[:platform_version][0..2].to_f][:os_omnibus_name]
+          @attrs = {:platform => set[:platform_family], :platform_version => platform_version}
         else
           @attrs = {:platform => set[:platform], :platform_version => set[:platform_version]}
         end

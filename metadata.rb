@@ -5,3 +5,4 @@ license          "Apache 2.0"
 description      "Chef omnibus package updater and installer"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "1.0.2"
+depends          "windows"
