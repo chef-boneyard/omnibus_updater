@@ -24,7 +24,6 @@ elsif(node[:platform] == 'debian' && Gem::Version.new(node[:platform_version]) <
 elsif(node[:platform] == 'raspbian')
   Chef::Log.warn 'Omnibus updater does not support Raspbian'
 else
-  include_recipe 'omnibus_updater::downloader'
   include_recipe 'omnibus_updater::installer'
 end
 
