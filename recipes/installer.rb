@@ -42,12 +42,38 @@ ruby_block 'omnibus chef killer' do
   end
 end
 
-if(node[:omnibus_updater][:use_install_sh])
+if(node[:omnibus_updater][:install_sh][:enabled])
+  resource_ident = "v#{node[:omnibus_updater].fetch(:version, 'latest')}"
+  script_path = File.join(Chef::Config[:file_cache_path], 'chef-client-install.sh')
+
+  remote_file script_path do
+    source node[:omnibus_updater][:install_sh][:url]
+    mode 0755
+  end
+
+  script_command = [script_path]
+  script_options = Mash.new(node[:omnibus_updater][:install_sh][:script_options].to_hash)
+
+  if(node[:omnibus_updater][:version])
+    script_options['-v'] = node[:omnibus_updater][:version]
+  end
+
+  script_command.push(script_options.flatten).flatten.compact.join(' ')
+
+  execute "omnibus_install[#{resource_ident}]" do
+    command script_command
+    action :nothing
+    if(node[:omnibus_updater][:restart_chef_service])
+      notifies :restart, resources(:service => 'chef-client'), :immediately
+    end
+    notifies :create, resources(:ruby_block => 'omnibus chef killer'), :immediately
+  end
+
+else
   include_recipe 'omnibus_updater::downloader'
 
   remote_path = node[:omnibus_updater][:full_url].to_s
   resource_ident = File.basename(remote_path)
-
 
   execute "omnibus_install[#{resource_ident}]" do
     case File.extname(remote_path)
@@ -62,27 +88,6 @@ if(node[:omnibus_updater][:use_install_sh])
     else
       raise "Unknown package type encountered for install: #{File.extname(remote_path)}"
     end
-    action :nothing
-    if(node[:omnibus_updater][:restart_chef_service])
-      notifies :restart, resources(:service => 'chef-client'), :immediately
-    end
-    notifies :create, resources(:ruby_block => 'omnibus chef killer'), :immediately
-  end
-
-else
-  resource_ident = "v#{node[:omnibus_updater].fetch(:version, 'latest')}"
-  script_path = File.join(Chef::Config[:file_cache_path], 'chef-client-install.sh')
-
-  remote_file script_path do
-    source node[:omnibus_updater][:install_sh_url]
-    mode 0755
-  end
-
-  execute "omnibus_install[#{resource_ident}]" do
-    command [
-      script_path,
-      node[:omnibus_updater][:version] ? "-v #{node[:omnibus_updater][:version]}" : nil
-    ].compact.join(' ')
     action :nothing
     if(node[:omnibus_updater][:restart_chef_service])
       notifies :restart, resources(:service => 'chef-client'), :immediately
