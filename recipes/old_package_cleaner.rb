@@ -29,5 +29,6 @@ old_pkgs =
 old_pkgs.each do |filename|
   file filename do
     action :delete
+    backup 1
   end
 end
