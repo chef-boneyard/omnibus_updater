@@ -1,3 +1,10 @@
+v1.0.4
+======
+* file_cache_path path to store chef-client
+* Avoid deleting chef-server packages if using the same cache dir
+* Only backup the last old chef client file
+* make sure directory exists before trying to write to it
+
 v1.0.2
 ======
 * Maintenance updates
