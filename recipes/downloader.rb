@@ -35,6 +35,10 @@ end
 if(remote_path)
   node.set[:omnibus_updater][:full_url] = remote_path
 
+  directory node[:omnibus_updater][:cache_dir] do
+    recursive true
+  end
+
   remote_file "omnibus_remote[#{File.basename(remote_path)}]" do
     path File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))
     source remote_path
