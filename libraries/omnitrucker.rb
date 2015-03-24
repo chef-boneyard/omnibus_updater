@@ -40,7 +40,7 @@ module OmnibusTrucker
       if(node)
         args = collect_attributes(node).merge(args)
       end
-      url = args[:url] || "http://www.opscode.com/chef/download#{'-server' if args[:server]}"
+      url = args[:url] || "https://www.getchef.com/chef/metadata#{'-server' if args[:server]}"
       u_args = URL_MAP.map do |u_k, a_k|
         "#{u_k}=#{args[a_k]}" unless args[a_k].nil?
       end.compact
@@ -81,11 +81,10 @@ module OmnibusTrucker
         url = url_or_node
         raise "Node instance is required for Omnitruck.url!" unless node
       end
-      request = Chef::REST::RESTRequest.new(:head, URI.parse(url), nil)
+      request = Chef::REST::RESTRequest.new(:get, URI.parse(url), nil)
       result = request.call
-      if(result.kind_of?(Net::HTTPRedirection))
-        result['location']
-      end
+      meta = Hash[result.body.split("\n").map { |ln| ln.split("\t", 2) }]
+      return meta['url']
     end
 
   end
