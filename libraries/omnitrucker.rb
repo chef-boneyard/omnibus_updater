@@ -23,7 +23,7 @@ module OmnibusTrucker
       :p => :platform, :pv => :platform_version, :m => :machine,
       :v => :version, :prerelease => :prerelease,
       :nightlies => :nightlies
-    }
+    } unless defined?(URL_MAP)
 
     def build_url(*opts)
       args = node = nil
