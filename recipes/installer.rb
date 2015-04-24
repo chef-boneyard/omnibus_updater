@@ -21,7 +21,7 @@ include_recipe 'omnibus_updater'
 remote_path = node[:omnibus_updater][:full_url].to_s
 
 file '/tmp/nocheck' do
-  content 'conflict=nocheck\naction=nocheck'
+  content "conflict=nocheck\naction=nocheck\ninstance=overwrite"
   only_if { node['os'] =~ /^solaris/ }
 end
 
