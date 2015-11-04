@@ -6,6 +6,15 @@ Chef package into your system if you are currently running
 via gem install, and it can keep your omnibus install up
 to date.
 
+Supports
+========
+
+- amazon
+- rhel
+- debian
+- max_os_x
+- solaris
+
 Usage
 =====
 
