@@ -9,9 +9,13 @@ to date.
 Supports
 ========
 
+- redhat
+- centos
 - amazon
-- rhel
+- scientific
+- oracle
 - debian
+- ubuntu
 - max_os_x
 - solaris
 
