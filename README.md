@@ -16,7 +16,7 @@ Supports
 - oracle
 - debian
 - ubuntu
-- max_os_x
+- mac_os_x
 - solaris
 
 Usage
