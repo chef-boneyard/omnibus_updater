@@ -18,7 +18,6 @@
 #
 
 include_recipe 'omnibus_updater'
-include_recipe 'windows'
 remote_path = node[:omnibus_updater][:full_url].to_s
 
 file '/tmp/nocheck' do
