@@ -18,6 +18,7 @@
 #
 
 include_recipe 'omnibus_updater'
+include_recipe 'windows'
 remote_path = node[:omnibus_updater][:full_url].to_s
 
 file '/tmp/nocheck' do
@@ -45,6 +46,11 @@ execute "omnibus_install[#{File.basename(remote_path)}]" do
     command "dpkg -i #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.rpm'
     command "rpm -Uvh --oldpackage #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+  when '.msi'
+    base_path = File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))
+    my_win_path = base_path.gsub(::File::SEPARATOR, ::File::ALT_SEPARATOR || '\\') if base_path
+    # print "my_win_path is #{my_win_path}"
+    command "msiexec /qn /i #{my_win_path}"
   when '.sh'
     command "/bin/sh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
   when '.solaris'
