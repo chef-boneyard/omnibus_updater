@@ -40,7 +40,7 @@ module OmnibusTrucker
       if(node)
         args = collect_attributes(node).merge(args)
       end
-      url = args[:url] || "http://www.opscode.com/chef/download#{'-server' if args[:server]}"
+      url = args[:url] || "http://www.chef.io/chef/download#{'-server' if args[:server]}"
       u_args = URL_MAP.map do |u_k, a_k|
         "#{u_k}=#{args[a_k]}" unless args[a_k].nil?
       end.compact
