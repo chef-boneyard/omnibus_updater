@@ -71,7 +71,8 @@ module OmnibusTrucker
         elsif(set[:platform] == 'debian')
           @attrs = {:platform => set[:platform], :platform_version => set[:platform_version].to_i}
         elsif(set[:platform_family] == 'mac_os_x')
-          @attrs = {:platform => set[:platform_family], :platform_version => [set[:platform_version].to_f, 10.7].min}
+          major, minor, _patch = set[:platform_version].split('.').map { |v| String(v) }
+          @attrs = {:platform => set[:platform_family], :platform_version => [[major, minor].join('.'), '10.7'].min}
         elsif(set[:platform_family] == 'windows')
           @attrs ={:platform => set[:platform], :platform_version => '2008r2'}
         else
