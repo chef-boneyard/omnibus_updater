@@ -52,7 +52,7 @@ module OmnibusTrucker
     end
 
     def collect_attributes(node, args={})
-      set = Mash[
+      set = Chef::Mash[
         [:platform_family, :platform, :platform_version].map do |k|
           [k, args[k] || node[k]]
         end
