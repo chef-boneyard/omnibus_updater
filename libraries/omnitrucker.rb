@@ -21,6 +21,10 @@ require "chef/rest"
 require "chef/mash"
 require "net/http"
 
+unless(Chef.constants.include?(:Mash))
+  Chef::Mash = Mash
+end
+
 module OmnibusTrucker
   class << self
     URL_MAP = {
