@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+require "chef/rest"
+
 module OmnibusTrucker
   class << self
     URL_MAP = {
