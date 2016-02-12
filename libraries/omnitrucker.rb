@@ -75,8 +75,13 @@ module OmnibusTrucker
         else
           @attrs = {:platform => set[:platform], :platform_version => set[:platform_version]}
         end
-        @attrs[:machine] = args[:machine] || node[:kernel][:machine]
-        @attrs[:machine] = "i386" if(set[:platform_family] == 'solaris2' && @attrs[:machine] == "i86pc")
+        if(args[:machine])
+          @attrs[:machine] = args[:machine]
+        elsif(set[:platform_family] == 'solaris2')
+          @attrs[:machine] = (node[:kernel][:machine] == 'i86pc' ? 'i386' : 'sparc')
+        else
+          @attrs[:machine] = node[:kernel][:machine]
+        end
       end
       @attrs
     end
