@@ -18,6 +18,8 @@
 #
 
 require "chef/rest"
+require "chef/mash"
+require "net/http"
 
 module OmnibusTrucker
   class << self
