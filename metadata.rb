@@ -7,5 +7,5 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "1.0.6"
 
 %w(redhat centos amazon scientific oracle debian ubuntu mac_os_x solaris).each do |plat|
-  supports "#{plat}"
+  supports plat
 end
