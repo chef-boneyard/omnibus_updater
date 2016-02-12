@@ -1,3 +1,13 @@
+v1.0.6
+======
+* Get rid of warnings about defined constant
+* update Chef download url
+* Updates supported versions
+* require chef/rest
+* use Chef::Mash explicitly
+* Define the Chef::Mash constant if not provided by chef
+* add test suites for ubuntu 14.04 and centos 7
+
 v1.0.4
 ======
 * file_cache_path path to store chef-client

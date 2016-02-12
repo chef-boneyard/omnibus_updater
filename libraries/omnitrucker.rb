@@ -17,13 +17,21 @@
 # limitations under the License.
 #
 
+require "chef/rest"
+require "chef/mash"
+require "net/http"
+
+unless(Chef.constants.include?(:Mash))
+  Chef::Mash = Mash
+end
+
 module OmnibusTrucker
   class << self
     URL_MAP = {
       :p => :platform, :pv => :platform_version, :m => :machine,
       :v => :version, :prerelease => :prerelease,
       :nightlies => :nightlies
-    }
+    }  unless defined?(URL_MAP)
 
     def build_url(*opts)
       args = node = nil
@@ -48,7 +56,7 @@ module OmnibusTrucker
     end
 
     def collect_attributes(node, args={})
-      set = Mash[
+      set = Chef::Mash[
         [:platform_family, :platform, :platform_version].map do |k|
           [k, args[k] || node[k]]
         end
