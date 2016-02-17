@@ -58,7 +58,7 @@ if(node[:omnibus_updater][:install_sh][:enabled])
     script_options['-v'] = node[:omnibus_updater][:version]
   end
 
-  script_command.push(script_options.flatten).flatten.compact.join(' ')
+  script_command.push(*script_options.flatten)
 
   execute "omnibus_install[#{resource_ident}]" do
     command script_command
