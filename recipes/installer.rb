@@ -24,7 +24,7 @@ if(node[:platform] == 'windows')
   version = node[:omnibus_updater][:version] || remote_path.scan(%r{chef-windows|client-(\d+\.\d+.\d+)}).flatten.first
 
   windows_package "Chef Client v#{version}" do
-    source remote_path
+    source File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))
   end
 else
   file '/tmp/nocheck' do
