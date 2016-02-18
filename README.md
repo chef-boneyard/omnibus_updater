@@ -58,24 +58,21 @@ Latest Version
 Force installation of the latest version regardless of value stored in version
 attribute by setting the `force_latest` attribute.
 
-Chef Killing
+Restarting Chef Client
 ------------
 
-By default the omnibus updater will re-exec chef to continue the run using the
-new version.  Older versions used to just kill the chef-client and abort the
-run, but exec()ing Chef allows runs to complete without errors being bubbled up
+By default the omnibus updater will restart the run using the new version
+by calling `exec` with the original command line and arguments.
+Older versions used to kill the chef-client and abort the run by default,
+but re-`exec`ing the client allows runs to complete without errors being bubbled up
 the stack. You can choose between these behaviors by using the
-`upgrade_behavior` attribute.
+`upgrade_behavior` attribute:
 
-* If set to 'kill', the run will be aborted by raising an exception.
-* If set to 'exec', the run will be resumed by re-exec'ing chef-client. This
-  doesn't work in solo mode; when using chef-solo, setting this attribute to
-  'exec' is equivalent to 'kill'. You can customize the command that is exec'd
-  by setting the `exec_command` attribute.
-* If set to anything else, the run is not aborted. Doing this is not
-  recommended. Internal chef libraries may change, move, or no
-  longer exist. The currently running instance can encounter unexpected states
-  because of this, so using 'kill' or 'exec' is highly recommended.
+* If set to `:kill`, the run will be aborted by raising an exception.
+* If set to `:exec` (the default), the run will be resumed by re-`exec`ing chef-client.
+  You can customize the command that is exec'd by setting the `exec_command` attribute.
+  The default for `exec_command` is `$0` (the original command used to call chef-client).
+* If set to anything else, an error is raised.
 
 Restart chef-client Service
 ---------------------------
