@@ -23,12 +23,12 @@ default[:omnibus_updater][:remove_chef_system_gem] = false
 default[:omnibus_updater][:prerelease] = false
 default[:omnibus_updater][:disabled] = false
 default[:omnibus_updater][:kill_chef_on_upgrade] = true
-default[:omnibus_updater][:upgrade_behavior] = 'exec'
 default[:omnibus_updater][:upgrade_notification] = :immediately
+# Default to 'kill' for long-running, interval-based chef-client
+# Default to 'exec' for local-mode and single-run chef-client
+default[:omnibus_updater][:upgrade_behavior] =
+  Chef::Config[:interval] ? 'kill' : 'exec'
 default[:omnibus_updater][:exec_command] = $0.split(' ').first
 default[:omnibus_updater][:exec_args] = ARGV
-# restore the 'classic' chef_killer behavior with:
-# default[:omnibus_updater][:upgrade_behavior] = 'kill'
-# default[:omnibus_updater][:upgrade_notification] = :delayed
 default[:omnibus_updater][:prevent_downgrade] = false
 default[:omnibus_updater][:restart_chef_service] = false

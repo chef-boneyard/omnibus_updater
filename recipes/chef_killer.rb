@@ -2,8 +2,12 @@ ruby_block 'omnibus chef killer' do
   block do
     upgrade_behavior = node[:omnibus_updater][:upgrade_behavior]
     if upgrade_behavior == 'exec'
+      if Chef::Config[:interval]
+        Chef::Log.warn 'omnibus_updater "exec" not supported for long-running client process -- changing to "kill".'
+        upgrade_behavior = 'kill'
+      end
       unless Process.respond_to?(:exec)
-        Chef::Log.warn 'omnibus_updater "exec" upgrade behavior not available -- changing to "kill".'
+        Chef::Log.warn 'omnibus_updater Process.exec not available -- changing to "kill".'
         upgrade_behavior = 'kill'
       end
     end

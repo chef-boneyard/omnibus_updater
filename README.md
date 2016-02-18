@@ -61,15 +61,17 @@ attribute by setting the `force_latest` attribute.
 Restarting Chef Client
 ------------
 
-By default the omnibus updater will restart the run using the new version
-by calling `exec` with the original command line and arguments.
-Older versions used to kill the chef-client and abort the run by default,
-but re-`exec`ing the client allows runs to complete without errors being bubbled up
-the stack. You can choose between these behaviors by using the
-`upgrade_behavior` attribute:
+By default, the Chef Client run will be terminated (killed) when an upgrade is performed.
+This behavior can be disabled by setting `:kill_chef_on_upgrade` to false.
 
-* If set to `:kill`, the run will be aborted by raising an exception.
-* If set to `:exec` (the default), the run will be resumed by re-`exec`ing chef-client.
+Two kill modes are supported by the `upgrade_behavior` attribute:
+
+* If set to `'kill'` (default for interval-based chef-client runs), the run will be aborted.
+  When using this behavior, it is recommended to set `:restart_chef_service` to true if the
+  long-running Chef process is managed as an OS service.
+* If set to `'exec'` (default for non-interval runs), the run will be restarted by
+  re-`exec`ing chef-client directly within the current process.
+  This allows the run to complete seamlessly without errors being bubbled up the stack.
   You can customize the command that is exec'd by setting the `exec_command` attribute.
   The default for `exec_command` is `$0` (the original command used to call chef-client).
 * If set to anything else, an error is raised.
