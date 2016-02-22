@@ -44,7 +44,7 @@ if(node[:platform] == 'windows')
     ruby_block 'Omnibus Chef Update' do
       block {true}
       notifies :run, 'execute[chef-service-kill]', :immediately
-      #notifies :run, 'execute[chef-uninstall]', :immediately
+      notifies :run, 'execute[chef-uninstall]', :immediately
       notifies :run, 'execute[chef-install]', :immediately
       notifies :start, 'service[chef-client]', :immediately if node[:omnibus_updater][:restart_chef_service]
       not_if { chef_version == "Chef: #{version}\r\n" }
