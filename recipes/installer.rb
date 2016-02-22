@@ -21,26 +21,33 @@ include_recipe 'omnibus_updater'
 remote_path = node[:omnibus_updater][:full_url].to_s
 
 if(node[:platform] == 'windows')
+  version = node[:omnibus_updater][:version] || remote_path.scan(%r{chef-windows|client-(\d+\.\d+.\d+)}).flatten.first
+  Chef::Resource::send(:include, Chef::Mixin::ShellOut)
+  chef_version = shell_out("chef-client -v")
+  chef_version = chef_version.stdout
+
   if node['chef_packages']['chef']['version'] != node['omnibus_updater']['version']
     execute 'chef-uninstall' do
       command 'wmic product where "name like \'Chef Client%% %%\'" call uninstall /nointeractive'
       action :nothing
     end
     execute 'chef-install' do
-      command "msiexec.exe /qn /i #{File.basename(remote_path)}"
+      command "msiexec.exe /qn /i #{File.basename(remote_path)} ADDLOCAL=\"#{node[:omnibus_updater][:addlocal]}\""
       cwd node[:omnibus_updater][:cache_dir]
       action :nothing
     end
-    service 'chef-client' do
+    execute 'chef-service-kill' do
+      command 'taskkill /F /FI "SERVICES eq chef-client"'
       action :nothing
     end
 
     ruby_block 'Omnibus Chef Update' do
-      block{ true }
-      notifies :run, 'execute[chef-uninstall]', :immediately
+      block {true}
+      notifies :run, 'execute[chef-service-kill]', :immediately
+      #notifies :run, 'execute[chef-uninstall]', :immediately
       notifies :run, 'execute[chef-install]', :immediately
       notifies :start, 'service[chef-client]', :immediately if node[:omnibus_updater][:restart_chef_service]
-      only_if { node['chef_packages']['chef']['version'] != node['omnibus_updater']['version'] }
+      not_if { chef_version == "Chef: #{version}\r\n" }
     end
   end
 else
