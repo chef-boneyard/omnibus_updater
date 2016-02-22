@@ -21,10 +21,27 @@ include_recipe 'omnibus_updater'
 remote_path = node[:omnibus_updater][:full_url].to_s
 
 if(node[:platform] == 'windows')
-  version = node[:omnibus_updater][:version] || remote_path.scan(%r{chef-windows|client-(\d+\.\d+.\d+)}).flatten.first
+  if node['chef_packages']['chef']['version'] != node['omnibus_updater']['version']
+    execute 'chef-uninstall' do
+      command 'wmic product where "name like \'Chef Client%% %%\'" call uninstall /nointeractive'
+      action :nothing
+    end
+    execute 'chef-install' do
+      command "msiexec.exe /qn /i #{File.basename(remote_path)}"
+      cwd node[:omnibus_updater][:cache_dir]
+      action :nothing
+    end
+    service 'chef-client' do
+      action :nothing
+    end
 
-  windows_package "Chef Client v#{version}" do
-    source File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))
+    ruby_block 'Omnibus Chef Update' do
+      block{ true }
+      notifies :run, 'execute[chef-uninstall]', :immediately
+      notifies :run, 'execute[chef-install]', :immediately
+      notifies :start, 'service[chef-client]', :immediately if node[:omnibus_updater][:restart_chef_service]
+      only_if { node['chef_packages']['chef']['version'] != node['omnibus_updater']['version'] }
+    end
   end
 else
   file '/tmp/nocheck' do
