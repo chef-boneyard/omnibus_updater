@@ -22,7 +22,7 @@ remote_path = node[:omnibus_updater][:full_url].to_s
 
 if(node[:platform] == 'windows')
   version = node[:omnibus_updater][:version] || remote_path.scan(%r{chef-windows|client-(\d+\.\d+.\d+)}).flatten.first
-  Chef::Resource::send(:include, Chef::Mixin::ShellOut)
+  Chef::Recipe.send(:include, Chef::Mixin::ShellOut)
   chef_version = shell_out("chef-client -v")
   chef_version = chef_version.stdout
 
