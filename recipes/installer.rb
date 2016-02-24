@@ -20,6 +20,10 @@
 include_recipe 'omnibus_updater'
 remote_path = node[:omnibus_updater][:full_url].to_s
 
+service 'chef-client' do
+  action :nothing
+end
+
 if(node[:platform] == 'windows')
   version = node[:omnibus_updater][:version] || remote_path.scan(%r{chef-windows|client-(\d+\.\d+.\d+)}).flatten.first
   Chef::Recipe.send(:include, Chef::Mixin::ShellOut)
@@ -54,10 +58,6 @@ else
   file '/tmp/nocheck' do
     content 'conflict=nocheck\naction=nocheck'
     only_if { node['os'] =~ /^solaris/ }
-  end
-
-  service 'chef-client' do
-    action :nothing
   end
 
   ruby_block 'omnibus chef killer' do
@@ -97,6 +97,6 @@ else
     notifies :run, resources(:execute => "omnibus_install[#{File.basename(remote_path)}]"), :delayed
     only_if { node['chef_packages']['chef']['version'] != node['omnibus_updater']['version'] }
   end
-
-  include_recipe 'omnibus_updater::old_package_cleaner'
 end
+
+include_recipe 'omnibus_updater::old_package_cleaner'
