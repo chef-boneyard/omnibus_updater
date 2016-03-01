@@ -58,15 +58,23 @@ Latest Version
 Force installation of the latest version regardless of value stored in version
 attribute by setting the `force_latest` attribute.
 
-Chef Killing
+Restarting Chef Client
 ------------
 
-By default the omnibus updater will kill the chef instance by raising an exception.
-You can turn this off using the `kill_chef_on_upgrade` attribute. It is not
-recommended to turn this off. Internal chef libraries may change, move, or no
-longer exist. The currently running instance can encounter unexpected states because
-of this. To prevent this, the updater will attempt to kill the Chef instance so
-that it can be restarted in a normal state.
+By default, the Chef Client run will be terminated (killed) when an upgrade is performed.
+This behavior can be disabled by setting `:kill_chef_on_upgrade` to false.
+
+Two kill modes are supported by the `upgrade_behavior` attribute:
+
+* If set to `'kill'` (default for interval-based chef-client runs), the run will be aborted.
+  When using this behavior, it is recommended to set `:restart_chef_service` to true if the
+  long-running Chef process is managed as an OS service.
+* If set to `'exec'` (default for non-interval runs), the run will be restarted by
+  re-`exec`ing chef-client directly within the current process.
+  This allows the run to complete seamlessly without errors being bubbled up the stack.
+  You can customize the command that is exec'd by setting the `exec_command` attribute.
+  The default for `exec_command` is `$0` (the original command used to call chef-client).
+* If set to anything else, an error is raised.
 
 Restart chef-client Service
 ---------------------------
@@ -88,9 +96,9 @@ to a role but should then be skipped for example on a Chef server.
 Prevent Downgrade
 -----------------
 
-If you want to prevent the updater from downgrading chef on a node, you 
+If you want to prevent the updater from downgrading chef on a node, you
 can set the `prevent_downgrade` attribute to true.  This can be useful
-for testing new versions manually.  Note that the `always_download` 
+for testing new versions manually.  Note that the `always_download`
 attribute takes precedence if set.
 
 Infos
