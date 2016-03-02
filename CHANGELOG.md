@@ -1,3 +1,7 @@
+Unreleased
+==========
+* Add Windows support (only Chef client versions 12.5.1 and below).
+
 v1.0.6
 ======
 * Get rid of warnings about defined constant
