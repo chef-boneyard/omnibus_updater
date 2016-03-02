@@ -18,6 +18,7 @@ Supports
 - ubuntu
 - mac_os_x
 - solaris
+- windows
 
 Usage
 =====
