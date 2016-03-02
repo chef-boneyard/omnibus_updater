@@ -23,6 +23,9 @@ elsif(node[:platform] == 'debian' && Gem::Version.new(node[:platform_version]) <
   Chef::Log.warn 'Omnibus updater does not support Debian 5'
 elsif(node[:platform] == 'raspbian')
   Chef::Log.warn 'Omnibus updater does not support Raspbian'
+elsif((node[:chef_packages][:chef][:version] == '12.6.0') && node[:os].downcase.include?('windows'))
+  Chef::Log.fatal 'Omnibus updater cannot upgrade or downgrade a Windows 12.6.0 installation'
+  raise
 else
   include_recipe 'omnibus_updater::downloader'
   include_recipe 'omnibus_updater::installer'
