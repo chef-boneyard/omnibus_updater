@@ -10,4 +10,6 @@ group :test do
   gem 'vagabond'
   gem 'test-kitchen'
   gem 'kitchen-vagrant'
+  gem 'winrm'
+  gem 'winrm-fs'
 end
