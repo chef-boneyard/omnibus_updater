@@ -27,7 +27,7 @@ platforms:
     box: windows-2012r2
   attributes:
     omnibus_updater:
-    version: 12.5.1
+      version: 12.5.1
 suites:
 - name: default
   run_list:
