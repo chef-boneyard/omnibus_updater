@@ -1,3 +1,9 @@
+v1.1.0
+==========
+* Add Windows support (only Chef client versions 12.5.1 and below).
+* Improve upgrade behavior on Amazon Linux
+* Explicitly require windows testing gems in order to support test-kitchen 1.6.x.
+
 v1.0.6
 ======
 * Get rid of warnings about defined constant

@@ -29,3 +29,4 @@ default[:omnibus_updater][:always_download] = false
 default[:omnibus_updater][:prevent_downgrade] = false
 default[:omnibus_updater][:restart_chef_service] = false
 default[:omnibus_updater][:checksum] = nil
+default[:omnibus_updater][:addlocal] = 'ChefClientFeature,ChefServiceFeature' #Recommend adding ChefPSModuleFeature for clients 12.4.0 and up on windows platform.

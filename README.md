@@ -18,6 +18,7 @@ Supports
 - ubuntu
 - mac_os_x
 - solaris
+- windows
 
 Usage
 =====
@@ -88,10 +89,26 @@ to a role but should then be skipped for example on a Chef server.
 Prevent Downgrade
 -----------------
 
-If you want to prevent the updater from downgrading chef on a node, you 
+If you want to prevent the updater from downgrading chef on a node, you
 can set the `prevent_downgrade` attribute to true.  This can be useful
-for testing new versions manually.  Note that the `always_download` 
+for testing new versions manually.  Note that the `always_download`
 attribute takes precedence if set.
+
+Warnings
+========
+
+Windows Support
+---------------
+Windows support is available in versions 1.0.8 and higher; however, we only support Chef Client versions 12.5.1 and below, due to a [known bug in 12.6.0](https://github.com/chef/chef/issues/4623). This is reflected in the Windows test suite.
+
+If you would like to wrap this cookbook in order to prevent OmnibusUpdater with version 12.6.0 on Windows, you may do something like the following:
+```
+if((node[:chef_packages][:chef][:version] == '12.6.0') && node[:os].downcase.include?('windows'))
+  Chef::Log.warn 'Omnibus updater cannot upgrade or downgrade a Windows 12.6.0 installation, skipping'
+else
+  include_recipe 'omnibus_updater'
+end
+```
 
 Infos
 =====
