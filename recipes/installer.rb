@@ -84,6 +84,13 @@ else
         command "/bin/sh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
       when '.solaris'
         command "pkgadd -n -d #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))} -a /tmp/nocheck chef"
+      when '.dmg'
+        command <<-EOF
+          hdiutil detach "/Volumes/chef_software" >/dev/null 2>&1 || true
+          hdiutil attach "#{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}" -mountpoint "/Volumes/chef_software"
+          cd / && /usr/sbin/installer -pkg `find "/Volumes/chef_software" -name \*.pkg` -target /
+          hdiutil detach "/Volumes/chef_software"
+        EOF
       else
         raise "Unknown package type encountered for install: #{File.extname(remote_path)}"
     end
