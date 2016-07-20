@@ -22,7 +22,7 @@ platforms:
     require_chef_omnibus: '11.14'
 - name: windows-2012r2-chef12
   driver_config:
-  box: chef/windows-server-2012r2-standard
+    box: chef/windows-server-2012r2-standard
 
 suites:
 - name: default
