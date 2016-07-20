@@ -1,0 +1,23 @@
+# rubocop todo
+#
+
+Lint/UselessAssignment:
+  Exclude:
+    - 'libraries/omnitrucker.rb'
+
+Performance/DoubleStartEndWith:
+  Exclude:
+    - 'recipes/remove_chef_system_gem.rb'
+
+# Configuration parameters: NamePrefix, NamePrefixBlacklist, NameWhitelist.
+# NamePrefix: is_, has_, have_
+# NamePrefixBlacklist: is_, has_, have_
+# NameWhitelist: is_a?
+Style/PredicateName:
+  Exclude:
+    - 'libraries/omnibus_checker.rb'
+
+# Configuration parameters: SupportedStyles.
+# SupportedStyles: compact, exploded
+Style/RaiseArgs:
+  EnforcedStyle: compact
