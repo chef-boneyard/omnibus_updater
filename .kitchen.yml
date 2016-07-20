@@ -27,7 +27,7 @@ platforms:
 suites:
 - name: default
   run_list:
-  - recipe[omnibus_updater_test::default]
+  - recipe[test::default]
 - name: upgrade
   run_list:
-  - recipe[omnibus_updater_test::version_upgrade]
+  - recipe[test::version_upgrade]
