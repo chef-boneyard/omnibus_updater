@@ -61,7 +61,7 @@ module OmnibusTrucker
         if set['platform'] == 'amazon'
           @attrs = { :platform => 'el', :platform_version => 6 }
         elsif set['platform_family'] == 'fedora'
-          @attrs = { :platform => 'el', :platform_version => 6 }
+          @attrs = { :platform => 'el', :platform_version => 7 }
         elsif set['platform_family'] == 'rhel'
           @attrs = { :platform => 'el', :platform_version => set['platform_version'].to_i }
         elsif set['platform'] == 'debian'
