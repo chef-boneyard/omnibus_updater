@@ -33,7 +33,7 @@ else
 end
 
 if remote_path
-  node.set['omnibus_updater']['full_url'] = remote_path
+  node.normal['omnibus_updater']['full_url'] = remote_path
 
   directory node['omnibus_updater']['cache_dir'] do
     recursive true
