@@ -25,10 +25,10 @@ service 'chef-client' do
   action :nothing
 end
 
-if(node['platform'] == 'windows')
-  version = node['omnibus_updater']['version'] || remote_path.scan(%r{chef-windows|client-(\d+\.\d+.\d+)}).flatten.first
+if node['platform'] == 'windows'
+  version = node['omnibus_updater']['version'] || remote_path.scan(/chef-windows|client-(\d+\.\d+.\d+)/).flatten.first
   Chef::Recipe.send(:include, Chef::Mixin::ShellOut)
-  chef_version = shell_out("chef-client -v")
+  chef_version = shell_out('chef-client -v')
   chef_version = chef_version.stdout
 
   if node['chef_packages']['chef']['version'] != node['omnibus_updater']['version']
@@ -47,7 +47,7 @@ if(node['platform'] == 'windows')
     end
 
     ruby_block 'Omnibus Chef Update' do
-      block {true}
+      block { true }
       notifies :run, 'execute[chef-service-kill]', :immediately
       notifies :run, 'execute[chef-uninstall]', :immediately
       notifies :run, 'execute[chef-install]', :immediately
@@ -73,37 +73,37 @@ else
 
   execute "omnibus_install[#{File.basename(remote_path)}]" do
     case File.extname(remote_path)
-      when '.deb'
-        command "dpkg -i #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
-      when '.rpm'
-        if node['platform'] == 'amazon'
-          command "rpm -e chef && rpm -Uvh --oldpackage #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
-        else
-          command "rpm -Uvh --oldpackage #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
-        end
-      when '.sh'
-        command "/bin/sh #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
-      when '.solaris'
-        command "pkgadd -n -d #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))} -a /tmp/nocheck chef"
-      when '.dmg'
-        command <<-EOF
+    when '.deb'
+      command "dpkg -i #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
+    when '.rpm'
+      if node['platform'] == 'amazon'
+        command "rpm -e chef && rpm -Uvh --oldpackage #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
+      else
+        command "rpm -Uvh --oldpackage #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
+      end
+    when '.sh'
+      command "/bin/sh #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
+    when '.solaris'
+      command "pkgadd -n -d #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))} -a /tmp/nocheck chef"
+    when '.dmg'
+      command <<-EOF
           hdiutil detach "/Volumes/chef_software" >/dev/null 2>&1 || true
           hdiutil attach "#{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}" -mountpoint "/Volumes/chef_software"
           cd / && /usr/sbin/installer -pkg `find "/Volumes/chef_software" -name \*.pkg` -target /
           hdiutil detach "/Volumes/chef_software"
         EOF
-      else
-        raise "Unknown package type encountered for install: #{File.extname(remote_path)}"
+    else
+      raise "Unknown package type encountered for install: #{File.extname(remote_path)}"
     end
     action :nothing
-    if(node['omnibus_updater']['restart_chef_service'])
+    if node['omnibus_updater']['restart_chef_service']
       notifies :restart, resources(:service => 'chef-client'), :immediately
     end
     notifies :create, resources(:ruby_block => 'omnibus chef killer'), :immediately
   end
 
   ruby_block 'Omnibus Chef install notifier' do
-    block{ true }
+    block { true }
     action :nothing
     subscribes :create, resources(:remote_file => "omnibus_remote[#{File.basename(remote_path)}]"), :immediately
     notifies :run, resources(:execute => "omnibus_install[#{File.basename(remote_path)}]"), :delayed

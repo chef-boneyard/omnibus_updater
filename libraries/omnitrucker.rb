@@ -17,13 +17,11 @@
 # limitations under the License.
 #
 
-require "chef/rest"
-require "chef/mash"
-require "net/http"
+require 'chef/rest'
+require 'chef/mash'
+require 'net/http'
 
-unless(Chef.constants.include?(:Mash))
-  Chef::Mash = Mash
-end
+Chef::Mash = Mash unless Chef.constants.include?(:Mash)
 
 module OmnibusTrucker
   class << self
@@ -31,23 +29,21 @@ module OmnibusTrucker
       :p => :platform, :pv => :platform_version, :m => :machine,
       :v => :version, :prerelease => :prerelease,
       :nightlies => :nightlies
-    }  unless defined?(URL_MAP)
+    }.freeze unless defined?(URL_MAP)
 
     def build_url(*opts)
       args = node = nil
       opts.each do |o|
-        if(o.kind_of?(Hash))
+        if o.is_a?(Hash)
           args = o
-        elsif(o.kind_of?(Chef::Node))
+        elsif o.is_a?(Chef::Node)
           node = o
         else
           raise ArgumentError.new "Provided argument is not allowed: #{o.class}"
         end
       end
       args ||= {}
-      if(node)
-        args = collect_attributes(node).merge(args)
-      end
+      args = collect_attributes(node).merge(args) if node
       url = args[:url] || "http://www.chef.io/chef/download#{'-server' if args[:server]}"
       u_args = URL_MAP.map do |u_k, a_k|
         "#{u_k}=#{args[a_k]}" unless args[a_k].nil?
@@ -55,49 +51,46 @@ module OmnibusTrucker
       "#{url}?#{u_args.join('&')}"
     end
 
-    def collect_attributes(node, args={})
+    def collect_attributes(node, args = {})
       set = Chef::Mash[
         [:platform_family, :platform, :platform_version].map do |k|
           [k, args[k] || node[k]]
         end
       ]
-      unless(@attrs)
-        if(set['platform'] == 'amazon')
-          @attrs = {:platform => 'el', :platform_version => 6}
-        elsif(set['platform_family'] == 'fedora')
-          @attrs = {:platform => 'el', :platform_version => 6}
-        elsif(set['platform_family'] == 'rhel')
-          @attrs = {:platform => 'el', :platform_version => set['platform_version'].to_i}
-        elsif(set['platform'] == 'debian')
-          @attrs = {:platform => set['platform'], :platform_version => set['platform_version'].to_i}
-        elsif(set['platform_family'] == 'mac_os_x')
+      unless @attrs
+        if set['platform'] == 'amazon'
+          @attrs = { :platform => 'el', :platform_version => 6 }
+        elsif set['platform_family'] == 'fedora'
+          @attrs = { :platform => 'el', :platform_version => 6 }
+        elsif set['platform_family'] == 'rhel'
+          @attrs = { :platform => 'el', :platform_version => set['platform_version'].to_i }
+        elsif set['platform'] == 'debian'
+          @attrs = { :platform => set['platform'], :platform_version => set['platform_version'].to_i }
+        elsif set['platform_family'] == 'mac_os_x'
           major, minor, _patch = set['platform_version'].split('.').map { |v| String(v) }
-          @attrs = {:platform => set['platform_family'], :platform_version => [[major, minor].join('.'), '10.7'].min}
-        elsif(set['platform_family'] == 'windows')
-          @attrs ={:platform => set['platform'], :platform_version => '2008r2'}
+          @attrs = { :platform => set['platform_family'], :platform_version => [[major, minor].join('.'), '10.7'].min }
+        elsif set['platform_family'] == 'windows'
+          @attrs = { :platform => set['platform'], :platform_version => '2008r2' }
         else
-          @attrs = {:platform => set['platform'], :platform_version => set['platform_version']}
+          @attrs = { :platform => set['platform'], :platform_version => set['platform_version'] }
         end
         @attrs[:machine] = args[:machine] || node['kernel']['machine']
-        @attrs[:machine] = "i386" if(set['platform_family'] == 'solaris2' && @attrs[:machine] == "i86pc")
+        @attrs[:machine] = 'i386' if set['platform_family'] == 'solaris2' && @attrs[:machine] == 'i86pc'
       end
       @attrs
     end
 
     def url(url_or_node, node = nil)
-      if(url_or_node.is_a?(Chef::Node))
+      if url_or_node.is_a?(Chef::Node)
         url = build_url(url_or_node)
         node = url_or_node
       else
         url = url_or_node
-        raise "Node instance is required for Omnitruck.url!" unless node
+        raise 'Node instance is required for Omnitruck.url!' unless node
       end
       request = Chef::REST::RESTRequest.new(:head, URI.parse(url), nil)
       result = request.call
-      if(result.kind_of?(Net::HTTPRedirection))
-        result['location']
-      end
+      result['location'] if result.is_a?(Net::HTTPRedirection)
     end
-
   end
 end
