@@ -19,8 +19,6 @@
 
 if node['omnibus_updater']['disabled']
   Chef::Log.warn 'Omnibus updater disabled via `disabled` attribute'
-elsif node['platform'] == 'debian' && Gem::Version.new(node['platform_version']) < Gem::Version.new('6.0.0')
-  Chef::Log.warn 'Omnibus updater does not support Debian 5'
 elsif node['platform'] == 'raspbian'
   Chef::Log.warn 'Omnibus updater does not support Raspbian'
 else
