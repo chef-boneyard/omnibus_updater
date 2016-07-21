@@ -4,7 +4,9 @@
 
 This cookbook allows you to upgrade the omnibus based Chef install package via Chef. You can run either latest or pin to specific version.
 
-# Supports
+## Requirements
+
+### Platforms
 
 - redhat
 - centos
@@ -17,7 +19,15 @@ This cookbook allows you to upgrade the omnibus based Chef install package via C
 - solaris
 - windows
 
-# Usage
+### Chef
+
+- Chef 11+
+
+### Cookbooks
+
+- none
+
+## Usage
 
 Add the recipe to your run list and specify what version should be installed on the node:
 
@@ -43,13 +53,13 @@ override_attributes(
 )
 ```
 
-# Features
+## Features
 
-## Latest Version
+### Latest Version
 
 Force installation of the latest version regardless of value stored in version attribute by setting the `force_latest` attribute.
 
-## Chef Killing
+### Chef Killing
 
 By default the omnibus updater will kill the chef instance by raising an exception. You can turn this off using the `kill_chef_on_upgrade` attribute. It is not recommended to turn this off. Internal chef libraries may change, move, or no longer exist. The currently running instance can encounter unexpected states because of this. To prevent this, the updater will attempt to kill the Chef instance so that it can be restarted in a normal state.
 
@@ -57,21 +67,21 @@ By default the omnibus updater will kill the chef instance by raising an excepti
 
 Use the `restart_chef_service` attribute to restart chef-client if you have it running as a service.
 
-## Prerelease
+### Prerelease
 
 Prereleases can be installed via the auto-installation using `prerelease` attribute.
 
-## Disable
+### Disable
 
 If you want to disable the updater you can set the `disabled` attribute to true. This might be useful if the cookbook is added to a role but should then be skipped for example on a Chef server.
 
-## Prevent Downgrade
+### Prevent Downgrade
 
 If you want to prevent the updater from downgrading chef on a node, you can set the `prevent_downgrade` attribute to true. This can be useful for testing new versions manually. Note that the `always_download` attribute takes precedence if set.
 
-# Warnings
+## Warnings
 
-## Windows Support
+### Windows Support
 
 Windows support is available in versions 1.0.8 and higher; however, we only support Chef Client versions 12.5.1 and below, due to a [known bug in 12.6.0](https://github.com/chef/chef/issues/4623). This is reflected in the Windows test suite.
 
@@ -85,17 +95,9 @@ else
 end
 ```
 
-# Infos
-
-- Repo: <https://github.com/hw-cookbooks/omnibus_updater>
-- IRC: Freenode @ #heavywater
-- Cookbook: <http://ckbk.it/omnibus_updater>
-
-```
-
 ## License & Authors
 
-- Author: Chris Roberts Smith ([tsmith@chef.io](mailto:tsmith@chef.io))
+- Author: Chris Roberts ([chrisroberts.code@gmail.com](mailto:chrisroberts.code@gmail.com))
 
 ```text
 Copyright:: 2010-2016, Chef Software, Inc
