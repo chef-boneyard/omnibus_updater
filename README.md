@@ -35,7 +35,7 @@ Add the recipe to your run list and specify what version should be installed on 
 
 In your role you'll likely want to set the version. It defaults to nothing, and will install the latest..
 
-```
+```ruby
 override_attributes(
   :omnibus_updater => {
     :version => '11.4.0'
@@ -45,7 +45,7 @@ override_attributes(
 
 It can also uninstall Chef from the system Ruby installation if you tell it to:
 
-```
+```ruby
 override_attributes(
   :omnibus_updater => {
     :remove_chef_system_gem => true
@@ -87,8 +87,8 @@ Windows support is available in versions 1.0.8 and higher; however, we only supp
 
 If you would like to wrap this cookbook in order to prevent OmnibusUpdater with version 12.6.0 on Windows, you may do something like the following:
 
-```
-if((node[:chef_packages][:chef][:version] == '12.6.0') && node[:os].downcase.include?('windows'))
+```ruby
+if (node[:chef_packages][:chef][:version] == '12.6.0') && node[:os].downcase.include?('windows')
   Chef::Log.warn 'Omnibus updater cannot upgrade or downgrade a Windows 12.6.0 installation, skipping'
 else
   include_recipe 'omnibus_updater'
