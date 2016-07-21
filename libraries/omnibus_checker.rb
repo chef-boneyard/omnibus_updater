@@ -25,6 +25,6 @@ end
 
 OmnibusChecker.send(:extend, OmnibusChecker)
 
-unless(Chef::Recipe.instance_methods.include?(:is_omnibus?))
+unless Chef::Recipe.instance_methods.include?(:is_omnibus?)
   Chef::Recipe.send(:include, OmnibusChecker)
 end
