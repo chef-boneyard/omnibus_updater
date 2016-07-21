@@ -62,24 +62,24 @@ module OmnibusTrucker
         end
       ]
       unless(@attrs)
-        if(set[:platform] == 'amazon')
+        if(set['platform'] == 'amazon')
           @attrs = {:platform => 'el', :platform_version => 6}
-        elsif(set[:platform_family] == 'fedora')
+        elsif(set['platform_family'] == 'fedora')
           @attrs = {:platform => 'el', :platform_version => 6}
-        elsif(set[:platform_family] == 'rhel')
-          @attrs = {:platform => 'el', :platform_version => set[:platform_version].to_i}
-        elsif(set[:platform] == 'debian')
-          @attrs = {:platform => set[:platform], :platform_version => set[:platform_version].to_i}
-        elsif(set[:platform_family] == 'mac_os_x')
-          major, minor, _patch = set[:platform_version].split('.').map { |v| String(v) }
-          @attrs = {:platform => set[:platform_family], :platform_version => [[major, minor].join('.'), '10.7'].min}
-        elsif(set[:platform_family] == 'windows')
-          @attrs ={:platform => set[:platform], :platform_version => '2008r2'}
+        elsif(set['platform_family'] == 'rhel')
+          @attrs = {:platform => 'el', :platform_version => set['platform_version'].to_i}
+        elsif(set['platform'] == 'debian')
+          @attrs = {:platform => set['platform'], :platform_version => set['platform_version'].to_i}
+        elsif(set['platform_family'] == 'mac_os_x')
+          major, minor, _patch = set['platform_version'].split('.').map { |v| String(v) }
+          @attrs = {:platform => set['platform_family'], :platform_version => [[major, minor].join('.'), '10.7'].min}
+        elsif(set['platform_family'] == 'windows')
+          @attrs ={:platform => set['platform'], :platform_version => '2008r2'}
         else
-          @attrs = {:platform => set[:platform], :platform_version => set[:platform_version]}
+          @attrs = {:platform => set['platform'], :platform_version => set['platform_version']}
         end
-        @attrs[:machine] = args[:machine] || node[:kernel][:machine]
-        @attrs[:machine] = "i386" if(set[:platform_family] == 'solaris2' && @attrs[:machine] == "i86pc")
+        @attrs[:machine] = args[:machine] || node['kernel']['machine']
+        @attrs[:machine] = "i386" if(set['platform_family'] == 'solaris2' && @attrs[:machine] == "i86pc")
       end
       @attrs
     end

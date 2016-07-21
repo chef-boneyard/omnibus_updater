@@ -18,15 +18,15 @@
 #
 
 include_recipe 'omnibus_updater'
-remote_path = node[:omnibus_updater][:full_url].to_s
+remote_path = node['omnibus_updater']['full_url'].to_s
 
 service 'chef-client' do
   supports status: true, restart: true
   action :nothing
 end
 
-if(node[:platform] == 'windows')
-  version = node[:omnibus_updater][:version] || remote_path.scan(%r{chef-windows|client-(\d+\.\d+.\d+)}).flatten.first
+if(node['platform'] == 'windows')
+  version = node['omnibus_updater']['version'] || remote_path.scan(%r{chef-windows|client-(\d+\.\d+.\d+)}).flatten.first
   Chef::Recipe.send(:include, Chef::Mixin::ShellOut)
   chef_version = shell_out("chef-client -v")
   chef_version = chef_version.stdout
@@ -37,8 +37,8 @@ if(node[:platform] == 'windows')
       action :nothing
     end
     execute 'chef-install' do
-      command "msiexec.exe /qn /i #{File.basename(remote_path)} ADDLOCAL=\"#{node[:omnibus_updater][:addlocal]}\""
-      cwd node[:omnibus_updater][:cache_dir]
+      command "msiexec.exe /qn /i #{File.basename(remote_path)} ADDLOCAL=\"#{node['omnibus_updater']['addlocal']}\""
+      cwd node['omnibus_updater']['cache_dir']
       action :nothing
     end
     execute 'chef-service-kill' do
@@ -51,7 +51,7 @@ if(node[:platform] == 'windows')
       notifies :run, 'execute[chef-service-kill]', :immediately
       notifies :run, 'execute[chef-uninstall]', :immediately
       notifies :run, 'execute[chef-install]', :immediately
-      notifies :start, 'service[chef-client]', :immediately if node[:omnibus_updater][:restart_chef_service]
+      notifies :start, 'service[chef-client]', :immediately if node['omnibus_updater']['restart_chef_service']
       not_if { chef_version == "Chef: #{version}\r\n" }
     end
   end
@@ -67,28 +67,28 @@ else
     end
     action :nothing
     only_if do
-      node[:omnibus_updater][:kill_chef_on_upgrade]
+      node['omnibus_updater']['kill_chef_on_upgrade']
     end
   end
 
   execute "omnibus_install[#{File.basename(remote_path)}]" do
     case File.extname(remote_path)
       when '.deb'
-        command "dpkg -i #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+        command "dpkg -i #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
       when '.rpm'
         if node['platform'] == 'amazon'
-          command "rpm -e chef && rpm -Uvh --oldpackage #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+          command "rpm -e chef && rpm -Uvh --oldpackage #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
         else
-          command "rpm -Uvh --oldpackage #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+          command "rpm -Uvh --oldpackage #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
         end
       when '.sh'
-        command "/bin/sh #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}"
+        command "/bin/sh #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
       when '.solaris'
-        command "pkgadd -n -d #{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))} -a /tmp/nocheck chef"
+        command "pkgadd -n -d #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))} -a /tmp/nocheck chef"
       when '.dmg'
         command <<-EOF
           hdiutil detach "/Volumes/chef_software" >/dev/null 2>&1 || true
-          hdiutil attach "#{File.join(node[:omnibus_updater][:cache_dir], File.basename(remote_path))}" -mountpoint "/Volumes/chef_software"
+          hdiutil attach "#{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}" -mountpoint "/Volumes/chef_software"
           cd / && /usr/sbin/installer -pkg `find "/Volumes/chef_software" -name \*.pkg` -target /
           hdiutil detach "/Volumes/chef_software"
         EOF
@@ -96,7 +96,7 @@ else
         raise "Unknown package type encountered for install: #{File.extname(remote_path)}"
     end
     action :nothing
-    if(node[:omnibus_updater][:restart_chef_service])
+    if(node['omnibus_updater']['restart_chef_service'])
       notifies :restart, resources(:service => 'chef-client'), :immediately
     end
     notifies :create, resources(:ruby_block => 'omnibus chef killer'), :immediately
