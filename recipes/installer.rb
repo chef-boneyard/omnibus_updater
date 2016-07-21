@@ -18,14 +18,14 @@
 #
 
 include_recipe 'omnibus_updater'
-remote_path = node['omnibus_updater']['full_url'].to_s
+remote_path = node['omnibus_updater']['full_url']
 
 service 'chef-client' do
   supports status: true, restart: true
   action :nothing
 end
 
-if node['platform'] == 'windows'
+if platform?('windows')
   version = node['omnibus_updater']['version'] || remote_path.scan(/chef-windows|client-(\d+\.\d+.\d+)/).flatten.first
   Chef::Recipe.send(:include, Chef::Mixin::ShellOut)
   chef_version = shell_out('chef-client -v')
@@ -66,9 +66,7 @@ else
       raise 'New omnibus chef version installed. Killing Chef run!'
     end
     action :nothing
-    only_if do
-      node['omnibus_updater']['kill_chef_on_upgrade']
-    end
+    only_if { node['omnibus_updater']['kill_chef_on_upgrade'] }
   end
 
   execute "omnibus_install[#{File.basename(remote_path)}]" do
