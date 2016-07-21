@@ -1,31 +1,27 @@
 driver:
   name: vagrant
+  require_chef_omnibus: '11.14'
 
 provisioner:
   name: chef_zero
 
 platforms:
-- name: ubuntu-14.04
-  driver_config:
-    require_chef_omnibus: '11.14'
-- name: ubuntu-12.04
-  driver_config:
-    require_chef_omnibus: '11.14'
-- name: centos-7.0
-  driver_config:
-    require_chef_omnibus: '11.14'
-- name: centos-6.4
-  driver_config:
-    require_chef_omnibus: '11.14'
-- name: centos-5.11
-  driver_config:
-    require_chef_omnibus: '11.14'
-- name: windows-2012r2-chef12
-  driver_config:
-    box: chef/windows-server-2012r2-standard
+  - name: centos-5.11
+  - name: centos-6.7
+  - name: centos-7.2
+  - name: debian-7.10
+  - name: debian-8.4
+  - name: fedora-23
+  - name: opensuse-13.2
+  - name: ubuntu-12.04
+  - name: ubuntu-14.04
+  - name: ubuntu-16.04
+  - name: windows-2012r2-chef12
+    driver:
+      box: chef/windows-server-2012r2-standard
 
 suites:
-- name: default
+- name: rubygem_to_omnibus
   run_list:
   - recipe[test::default]
 - name: upgrade
