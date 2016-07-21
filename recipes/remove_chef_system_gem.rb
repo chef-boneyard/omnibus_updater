@@ -24,6 +24,6 @@ gem_package 'chef' do
       Chef::Resource::GemPackage.new('dummy_package')
     ).gem_env.gem_paths.detect{|path|
       path.start_with?('/opt/omnibus') || path.start_with?('/opt/chef')
-    }.nil? && node[:omnibus_updater][:remove_chef_system_gem]
+    }.nil? && node['omnibus_updater']['remove_chef_system_gem']
   end
 end
