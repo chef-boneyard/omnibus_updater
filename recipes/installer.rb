@@ -20,7 +20,8 @@
 include_recipe 'omnibus_updater'
 remote_path = node[:omnibus_updater][:full_url].to_s
 
-service 'chef-client' do
+service 'chef-client-omnibus' do
+  service_name 'chef-client'
   action :nothing
 end
 
