@@ -70,7 +70,7 @@ else
     only_if { node['omnibus_updater']['kill_chef_on_upgrade'] }
   end
 
-  execute "omnibus_install[#{File.basename(remote_path)}]" do
+  execute "omnibus_install[#{File.basename(remote_path)}]" do # ~FC009
     case File.extname(remote_path)
     when '.deb'
       command "dpkg -i #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))}"
@@ -96,16 +96,16 @@ else
     end
     action :nothing
     if node['omnibus_updater']['restart_chef_service']
-      notifies :restart, resources(:service => 'chef-client-omnibus'), :immediately
+      notifies :restart, 'service[chef-client-omnibus]', :immediately
     end
-    notifies :create, resources(:ruby_block => 'omnibus chef killer'), :immediately
+    notifies :create, 'ruby_block[omnibus chef killer]', :immediately
   end
 
   ruby_block 'Omnibus Chef install notifier' do
     block { true }
     action :nothing
-    subscribes :create, resources(:remote_file => "omnibus_remote[#{File.basename(remote_path)}]"), :immediately
-    notifies :run, resources(:execute => "omnibus_install[#{File.basename(remote_path)}]"), :delayed
+    subscribes :create, "remote_file[omnibus_remote[#{File.basename(remote_path)}]]", :immediately
+    notifies :run, "execute[omnibus_install[#{File.basename(remote_path)}]]", :delayed
     only_if { node['chef_packages']['chef']['version'] != node['omnibus_updater']['version'] }
   end
 end
