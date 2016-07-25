@@ -20,7 +20,8 @@
 include_recipe 'omnibus_updater'
 remote_path = node['omnibus_updater']['full_url']
 
-service 'chef-client' do
+service 'chef-client-omnibus' do
+  service_name 'chef-client'
   supports status: true, restart: true
   action :nothing
 end
@@ -51,7 +52,7 @@ if platform?('windows')
       notifies :run, 'execute[chef-service-kill]', :immediately
       notifies :run, 'execute[chef-uninstall]', :immediately
       notifies :run, 'execute[chef-install]', :immediately
-      notifies :start, 'service[chef-client]', :immediately if node['omnibus_updater']['restart_chef_service']
+      notifies :start, 'service[chef-client-omnibus]', :immediately if node['omnibus_updater']['restart_chef_service']
       not_if { chef_version == "Chef: #{version}\r\n" }
     end
   end
@@ -95,7 +96,7 @@ else
     end
     action :nothing
     if node['omnibus_updater']['restart_chef_service']
-      notifies :restart, resources(:service => 'chef-client'), :immediately
+      notifies :restart, resources(:service => 'chef-client-omnibus'), :immediately
     end
     notifies :create, resources(:ruby_block => 'omnibus chef killer'), :immediately
   end
