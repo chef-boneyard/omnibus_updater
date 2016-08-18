@@ -1,3 +1,23 @@
+# omnibus_updater Cookbook CHANGELOG
+
+This file is used to list changes made in each version of the omnibus_updater cookbook.
+
+## 1.2.0 (2016-08-18)
+
+- Add OS X DMG Support and fix Mac OS X Version Determination
+- Add a potential Restart Fix
+- Add chef_version metadata to the metadata.rb file
+- Change maintainership to Chef and add standard Chef contributing, test, and maintainer docs
+- Renamed the test recipe for consistency and removed the use of minitest
+- Swapped Librarian for Berkshelf
+- Added testing in Travis CI using ChefDK
+- Resolved Foodcritic FC001/FC043 warnings
+- Resolved all Cookstyle warnings
+- Identify Fedora to be EL6 not EL7
+- Avoid a node.set deprecation warning
+- No need to warn on Debian 5\. No one should be on this now.
+- Add a test for the standard flows
+
 # v1.1.0
 
 - Add Windows support (only Chef client versions 12.5.1 and below).
