@@ -26,8 +26,8 @@ else
   version = node['omnibus_updater']['version'] || ''
   remote_path = OmnibusTrucker.url(
     OmnibusTrucker.build_url(node,
-      :version => node['omnibus_updater']['force_latest'] ? nil : version.sub(/\-.+$/, ''),
-      :prerelease => node['omnibus_updater']['preview']
+      version: node['omnibus_updater']['force_latest'] ? nil : version.sub(/\-.+$/, ''),
+      prerelease: node['omnibus_updater']['preview']
                             ), node
   )
 end

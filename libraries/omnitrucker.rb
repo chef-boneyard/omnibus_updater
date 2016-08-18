@@ -26,9 +26,9 @@ Chef::Mash = Mash unless Chef.constants.include?(:Mash)
 module OmnibusTrucker
   class << self
     URL_MAP = {
-      :p => :platform, :pv => :platform_version, :m => :machine,
-      :v => :version, :prerelease => :prerelease,
-      :nightlies => :nightlies
+      p: 'platform', pv: 'platform_version', m: 'machine',
+      v: 'version', prerelease: 'prerelease',
+      nightlies: 'nightlies'
     }.freeze unless defined?(URL_MAP)
 
     def build_url(*opts)
@@ -53,26 +53,26 @@ module OmnibusTrucker
 
     def collect_attributes(node, args = {})
       set = Chef::Mash[
-        ['platform_family', 'platform', 'platform_version'].map do |k|
+        %w(platform_family platform platform_version).map do |k|
           [k, args[k] || node[k]]
         end
       ]
       unless @attrs
         if set['platform'] == 'amazon'
-          @attrs = { :platform => 'el', :platform_version => 6 }
+          @attrs = { platform: 'el', platform_version: 6 }
         elsif set['platform_family'] == 'fedora'
-          @attrs = { :platform => 'el', :platform_version => 7 }
+          @attrs = { platform: 'el', platform_version: 7 }
         elsif set['platform_family'] == 'rhel'
-          @attrs = { :platform => 'el', :platform_version => set['platform_version'].to_i }
+          @attrs = { platform: 'el', platform_version: set['platform_version'].to_i }
         elsif set['platform'] == 'debian'
-          @attrs = { :platform => set['platform'], :platform_version => set['platform_version'].to_i }
+          @attrs = { platform: set['platform'], platform_version: set['platform_version'].to_i }
         elsif set['platform_family'] == 'mac_os_x'
           major, minor, _patch = set['platform_version'].split('.').map { |v| String(v) }
-          @attrs = { :platform => set['platform_family'], :platform_version => [[major, minor].join('.'), '10.7'].min }
+          @attrs = { platform: set['platform_family'], platform_version: [[major, minor].join('.'), '10.7'].min }
         elsif set['platform_family'] == 'windows'
-          @attrs = { :platform => set['platform'], :platform_version => '2008r2' }
+          @attrs = { platform: set['platform'], platform_version: '2008r2' }
         else
-          @attrs = { :platform => set['platform'], :platform_version => set['platform_version'] }
+          @attrs = { platform: set['platform'], platform_version: set['platform_version'] }
         end
         @attrs[:machine] = args[:machine] || node['kernel']['machine']
         @attrs[:machine] = 'i386' if set['platform_family'] == 'solaris2' && @attrs[:machine] == 'i86pc'
