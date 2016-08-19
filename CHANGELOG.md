@@ -20,7 +20,7 @@ This file is used to list changes made in each version of the omnibus_updater co
 - Added testing in Travis CI using ChefDK
 - Resolved Foodcritic FC001/FC043 warnings
 - Resolved all Cookstyle warnings
-- Identify Fedora to be EL6 not EL7
+- Identify Fedora to be EL7 not EL6
 - Avoid a node.set deprecation warning
 - No need to warn on Debian 5\. No one should be on this now.
 - Add a test for the standard flows
