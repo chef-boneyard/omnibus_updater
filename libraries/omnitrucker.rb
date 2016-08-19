@@ -26,9 +26,9 @@ Chef::Mash = Mash unless Chef.constants.include?(:Mash)
 module OmnibusTrucker
   class << self
     URL_MAP = {
-      p: 'platform', pv: 'platform_version', m: 'machine',
-      v: 'version', prerelease: 'prerelease',
-      nightlies: 'nightlies'
+      p: :platform, pv: :platform_version, m: :machine,
+      v: :version, prerelease: :prerelease,
+      nightlies: :nightlies
     }.freeze unless defined?(URL_MAP)
 
     def build_url(*opts)
