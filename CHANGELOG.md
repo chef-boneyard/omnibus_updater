@@ -2,6 +2,13 @@
 
 This file is used to list changes made in each version of the omnibus_updater cookbook.
 
+## 1.2.1 (2016-08-19)
+
+- Use the improved rakefile
+- Fix github URLs in the metadata
+- Add testing on additional platforms to kitchen config
+- fix 1.2.0 no implicit conversion of nil to string. fixes #123
+
 ## 1.2.0 (2016-08-18)
 
 - Add OS X DMG Support and fix Mac OS X Version Determination
