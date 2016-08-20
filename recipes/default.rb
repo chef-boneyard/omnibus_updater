@@ -17,10 +17,14 @@
 # limitations under the License.
 #
 
+# fail hard if we're on an unsupported platform
+# feel free to open PRs to add additional platforms
+unless platform_family?('debian', 'fedora', 'mac_os_x', 'rhel', 'solaris2', 'windows', 'suse')
+  Chef::Application.fatal! "Omnibus updater does not support the #{node['platform']} platform"
+end
+
 if node['omnibus_updater']['disabled']
   Chef::Log.warn 'Omnibus updater disabled via `disabled` attribute'
-elsif node['platform'] == 'raspbian'
-  Chef::Log.warn 'Omnibus updater does not support Raspbian'
 else
   include_recipe 'omnibus_updater::downloader'
   include_recipe 'omnibus_updater::installer'
