@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of the omnibus_updater cookbook.
 
+## 2.0.0 (2016-08-19)
+
+- Hard fail on unsupported platforms now
+- Add suse support
+- Add additional chefspec tests
+
 ## 1.2.1 (2016-08-19)
 
 - Use the improved rakefile
