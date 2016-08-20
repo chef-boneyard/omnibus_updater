@@ -66,6 +66,10 @@ module OmnibusTrucker
           @attrs = { platform: 'el', platform_version: set['platform_version'].to_i }
         elsif set['platform'] == 'debian'
           @attrs = { platform: set['platform'], platform_version: set['platform_version'].to_i }
+        elsif set['platform'] =~ /opensuse/
+          @attrs = { platform: 'suse', platform_version: 13 }
+        elsif set['platform_family'] == 'suse'
+          @attrs = { platform: 'sles', platform_version: 12 }
         elsif set['platform_family'] == 'mac_os_x'
           major, minor, _patch = set['platform_version'].split('.').map { |v| String(v) }
           @attrs = { platform: set['platform_family'], platform_version: [[major, minor].join('.'), '10.7'].min }

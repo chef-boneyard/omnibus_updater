@@ -8,16 +8,12 @@ This cookbook allows you to upgrade the omnibus based Chef install package via C
 
 ### Platforms
 
-- redhat
-- centos
-- amazon
-- scientific
-- oracle
-- debian
-- ubuntu
-- mac_os_x
-- solaris
-- windows
+- Debian / Ubuntu
+- Mac OS X
+- RHEL (redhat, centos, amazon, scientific, oracle)
+- Solaris
+- SLES / openSUSE
+- Windows
 
 ### Chef
 

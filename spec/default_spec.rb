@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'omnibus_updater::default on unsupported platform' do
   cached(:chef_run) do
-    ChefSpec::SoloRunner.new(platform: 'opensuse', version: '13.2').converge('omnibus_updater::default')
+    ChefSpec::SoloRunner.new(platform: 'freebsd', version: '10.3').converge('omnibus_updater::default')
   end
 
   it 'logs a warning that the platform is unsupported' do
