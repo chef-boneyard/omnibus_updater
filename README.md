@@ -59,6 +59,21 @@ Force installation of the latest version regardless of value stored in version a
 
 By default the omnibus updater will kill the chef instance by raising an exception. You can turn this off using the `kill_chef_on_upgrade` attribute. It is not recommended to turn this off. Internal chef libraries may change, move, or no longer exist. The currently running instance can encounter unexpected states because of this. To prevent this, the updater will attempt to kill the Chef instance so that it can be restarted in a normal state.
 
+When `kill_chef_on_upgrade` is true Test-kitchen's converge stage will fail.  To avoid this and attempt a second converge after the initial converge aborts, you can configure `.kitchen.yml` to retry a converge given a specific exit code from `node['omnibus_updater']['kill_chef_on_upgrade_exit_code']`. The second converge should pick up the new chef-client version and exit without error. The following is how to accomplish this:
+
+```yaml
+provisioner:
+  retry_on_exit_code:
+    - 3
+  max_retries: 1
+  wait_for_retry: 1
+  client_rb:
+    exit_status: :enabled
+    client_fork: false
+```
+
+If changing the default exit code, keep this in mind: https://github.com/chef/chef-rfc/blob/master/rfc062-exit-status.md
+
 ## Restart chef-client Service
 
 Use the `restart_chef_service` attribute to restart chef-client if you have it running as a service.
