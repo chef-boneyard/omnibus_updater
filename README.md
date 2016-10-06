@@ -64,7 +64,7 @@ When `kill_chef_on_upgrade` is true Test-kitchen's converge stage will fail.  To
 ```yaml
 provisioner:
   retry_on_exit_code:
-    - 3
+    - 213
   max_retries: 1
   wait_for_retry: 1
   client_rb:
@@ -72,7 +72,8 @@ provisioner:
     client_fork: false
 ```
 
-If changing the default exit code, keep this in mind: https://github.com/chef/chef-rfc/blob/master/rfc062-exit-status.md
+exit code 213 is a special designation for Chef Client Upgrade
+https://github.com/chef/chef-rfc/blob/master/rfc062-exit-status.md
 
 ## Restart chef-client Service
 
