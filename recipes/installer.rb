@@ -64,7 +64,7 @@ else
 
   ruby_block 'omnibus chef killer' do
     block do
-      raise 'New omnibus chef version installed. Killing Chef run!'
+      Chef::Application.fatal!('New omnibus chef version installed. Killing Chef run!', node['omnibus_updater']['kill_chef_on_upgrade_exit_code'])
     end
     action :nothing
     only_if { node['omnibus_updater']['kill_chef_on_upgrade'] }
