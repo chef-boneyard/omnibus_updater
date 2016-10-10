@@ -71,9 +71,9 @@ provisioner:
     exit_status: :enabled
     client_fork: false
 ```
-
-exit code 213 is a special designation for Chef Client Upgrade
-https://github.com/chef/chef-rfc/blob/master/rfc062-exit-status.md
+Exit code 213 is a special designation for Chef Client Upgrade and only exists in Chef Client >= 12.15.19.
+If using an older client, you can replace exit code 213 (Chef upgrade) with 3 (SIGTERM recvd) as a workaround.
+Exit codes are documented here:  https://github.com/chef/chef-rfc/blob/master/rfc062-exit-status.md
 
 ## Restart chef-client Service
 
