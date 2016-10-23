@@ -38,6 +38,9 @@ platforms:
       box: chef/macosx-10.11 # private box in Chef's Atlas account
       provider: vmware_fusion
       require_chef_omnibus: '12.2.0'
+  - name: sles-12-sp1
+    driver:
+      box: chef/sles-12-sp1-x86_64 # private box in Chef's Atlas account
 
 suites:
 - name: default
