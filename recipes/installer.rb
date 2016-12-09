@@ -49,10 +49,12 @@ if platform?('windows')
 
     ruby_block 'Omnibus Chef Update' do
       block { true }
+      subscribes :create, "remote_file[omnibus_remote[#{File.basename(remote_path)}]]", :immediately
       notifies :run, 'execute[chef-service-kill]', :immediately
       notifies :run, 'execute[chef-uninstall]', :immediately
       notifies :run, 'execute[chef-install]', :immediately
       notifies :start, 'service[chef-client-omnibus]', :immediately if node['omnibus_updater']['restart_chef_service']
+      action :nothing
       not_if { chef_version == "Chef: #{version}\r\n" }
     end
   end
