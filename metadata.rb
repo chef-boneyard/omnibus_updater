@@ -6,7 +6,7 @@ description      'Chef omnibus package updater and installer'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '2.0.0'
 
-%w(redhat centos amazon scientific oracle debian ubuntu mac_os_x solaris windows).each do |os|
+%w(amazon centos debian mac_os_x opensuse opensuseleap oracle redhat scientific solaris suse ubuntu windows).each do |os|
   supports os
 end
 
