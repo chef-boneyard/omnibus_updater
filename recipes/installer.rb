@@ -32,7 +32,17 @@ if platform?('windows')
   chef_version = shell_out('chef-client -v')
   chef_version = chef_version.stdout
 
+  # clean up previous upgrades
+  directory 'c:/opscode/chef.upgrade' do
+    action :delete
+    recursive true
+  end
+
   if node['chef_packages']['chef']['version'] != node['omnibus_updater']['version']
+    execute 'chef-move' do
+      command 'move c:/opscode/chef c:/opscode/chef.upgrade'
+      action :nothing
+    end
     execute 'chef-uninstall' do
       command 'wmic product where "name like \'Chef Client%% %%\'" call uninstall /nointeractive'
       action :nothing
@@ -50,6 +60,7 @@ if platform?('windows')
     ruby_block 'Omnibus Chef Update' do
       block { true }
       notifies :run, 'execute[chef-service-kill]', :immediately
+      notifies :run, 'execute[chef-move]', :immediately
       notifies :run, 'execute[chef-uninstall]', :immediately
       notifies :run, 'execute[chef-install]', :immediately
       notifies :start, 'service[chef-client-omnibus]', :immediately if node['omnibus_updater']['restart_chef_service']
