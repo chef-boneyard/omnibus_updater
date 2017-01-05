@@ -2,6 +2,13 @@
 
 This file is used to list changes made in each version of the omnibus_updater cookbook.
 
+## 3.0.0 (2017-01-05)
+
+- Added support for the new upgrade exit code (213) introduced with RFC062 and first shipped in chef 12.15.19
+- Fix support for upgrading Windows client 12.6 and later by first moving the install directory
+- Remove the recipe to cleanup system ruby chef installs. We should assume everyone is on Omnibus installs at this point and this same functionality can be easily implemented in your own recipes
+- Added suse, opensuse, and opensuseleap to the metadata
+
 ## 2.0.0 (2016-08-19)
 
 - Hard fail on unsupported platforms now
