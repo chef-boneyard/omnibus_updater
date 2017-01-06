@@ -5,10 +5,6 @@ Lint/UselessAssignment:
   Exclude:
     - 'libraries/omnitrucker.rb'
 
-Performance/DoubleStartEndWith:
-  Exclude:
-    - 'recipes/remove_chef_system_gem.rb'
-
 # Configuration parameters: NamePrefix, NamePrefixBlacklist, NameWhitelist.
 # NamePrefix: is_, has_, have_
 # NamePrefixBlacklist: is_, has_, have_

@@ -30,20 +30,4 @@ describe 'omnibus_updater::default with no attributes set' do
   it 'includes the old_package_cleaner recipe' do
     expect(chef_run).to include_recipe('omnibus_updater::old_package_cleaner')
   end
-
-  it 'does not include the remove_chef_system_gem recipe' do
-    expect(chef_run).to_not include_recipe('omnibus_updater::remove_chef_system_gem')
-  end
-end
-
-describe 'omnibus_updater::default with remove_chef_system_gem set' do
-  let(:chef_run) do
-    ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04') do |node|
-      node.normal['omnibus_updater']['remove_chef_system_gem'] = true
-    end.converge('omnibus_updater::default')
-
-    it 'includes the remove_chef_system_gem recipe' do
-      expect(chef_run).to include_recipe('omnibus_updater::remove_chef_system_gem')
-    end
-  end
 end
