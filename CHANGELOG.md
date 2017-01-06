@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of the omnibus_updater cookbook.
 
+## 3.0.1 (2017-01-05)
+
+- Remove the remaining system gem reference
+
 ## 3.0.0 (2017-01-05)
 
 - Added support for the new upgrade exit code (213) introduced with RFC062 and first shipped in chef 12.15.19
