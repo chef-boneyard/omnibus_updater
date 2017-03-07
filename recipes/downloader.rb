@@ -30,7 +30,7 @@ else
       prerelease: node['omnibus_updater']['preview']
                             ), node
   )
-  raise 'Did not find path' if remote_path.nil?
+  raise 'Could not construct URL for chef-download' if remote_path.nil?
 end
 
 if remote_path
