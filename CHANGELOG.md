@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of the omnibus_updater cookbook.
 
+## 3.0.2 (2017-03-07)
+
+- Fix version detection for macOS systems
+- Test with Local Delivery instead of Rake
+
 ## 3.0.1 (2017-01-05)
 
 - Remove the remaining system gem reference
