@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: omnibus_updater
+# Cookbook:: omnibus_updater
 # Library:: omnitrucker
 #
-# Copyright 2014, Heavy Water Ops, LLC
+# Copyright:: 2014-2017, Heavy Water Ops, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ module OmnibusTrucker
         elsif set['platform_family'] == 'mac_os_x'
           major, minor, _patch = set['platform_version'].split('.').map { |v| String(v) }
           minor = [minor.to_i, 11].min # this is somewhat of a hack, we need to prevent this recipe to construct links for 10.12 for which there is no download yet...
-          @attrs = { platform: set['platform_family'], platform_version: [[major, minor].join('.'), '10.7'].max { |x, y| Gem::Version.new(x) <=> Gem::Version.new(y)} }
+          @attrs = { platform: set['platform_family'], platform_version: [[major, minor].join('.'), '10.7'].max { |x, y| Gem::Version.new(x) <=> Gem::Version.new(y) } }
         elsif set['platform_family'] == 'windows'
           @attrs = { platform: set['platform'], platform_version: '2008r2' }
         else

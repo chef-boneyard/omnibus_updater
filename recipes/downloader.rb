@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: omnibus_updater
+# Cookbook:: omnibus_updater
 # Recipe:: downloader
 #
-# Copyright 2014, Heavy Water Ops, LLC
+# Copyright:: 2014-2017, Heavy Water Ops, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
