@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of the omnibus_updater cookbook.
 
+## 3.1.0 (2017-03-27)
+
+- Use standardize Apache 2 license string
+- Include Support for AIX
+
 ## 3.0.2 (2017-03-07)
 
 - Fix version detection for macOS systems
