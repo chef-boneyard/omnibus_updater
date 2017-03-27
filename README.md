@@ -14,6 +14,7 @@ This cookbook allows you to upgrade the omnibus based Chef install package via C
 - Solaris
 - SLES / openSUSE
 - Windows
+- AIX 
 
 ### Chef
 

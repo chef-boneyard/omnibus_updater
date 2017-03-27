@@ -19,7 +19,7 @@
 
 # fail hard if we're on an unsupported platform
 # feel free to open PRs to add additional platforms
-unless platform_family?('debian', 'fedora', 'mac_os_x', 'rhel', 'solaris2', 'windows', 'suse')
+unless platform_family?('debian', 'fedora', 'mac_os_x', 'rhel', 'solaris2', 'windows', 'suse', 'aix')
   Chef::Application.fatal! "Omnibus updater does not support the #{node['platform']} platform"
 end
 
