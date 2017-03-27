@@ -102,6 +102,8 @@ else
           cd / && /usr/sbin/installer -pkg `find "/Volumes/chef_software" -name \*.pkg` -target /
           hdiutil detach "/Volumes/chef_software"
         EOF
+    when '.bff'
+      command "install_all_updates -cY -d #{File.join(node['omnibus_updater']['cache_dir'], File.basename(remote_path))} chef"
     else
       raise "Unknown package type encountered for install: #{File.extname(remote_path)}"
     end
