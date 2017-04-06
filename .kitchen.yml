@@ -40,9 +40,9 @@ platforms:
       box: chef/sles-12-sp1-x86_64 # private box in Chef's Atlas account
 
 suites:
-- name: default
-  run_list:
-  - recipe[test::default]
-- name: upgrade
-  run_list:
-  - recipe[test::version_upgrade]
+  - name: default
+    run_list:
+      - recipe[test::default]
+  - name: upgrade
+    run_list:
+      - recipe[test::version_upgrade]
