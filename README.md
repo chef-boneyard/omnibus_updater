@@ -4,6 +4,13 @@
 
 This cookbook allows you to upgrade the omnibus based Chef install package via Chef. You can run either latest or pin to specific version.
 
+## Deprecation notice
+
+Going forward we're focusing Chef Client updater work on the new chef_client_updater cookbook. This cookbook is a complete rewrite utilizing Chef's mixlib-install and mixlib-version gems to better update the Chef Client. The new cookbook features both a simple recipe for upgrading the client and a custom resource for more advanced usage in wrapper cookbooks. It does require Chef Client 12.1+ so you'll need to have your clients updated to to this release first, but once there we believe you'll have a far superior experience.
+
+https://github.com/chef-cookbooks/chef_client_updater
+
+
 ## Requirements
 
 ### Platforms
